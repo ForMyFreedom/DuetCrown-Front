@@ -1,0 +1,123 @@
+.group-of-moviments {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: start;
+    border-bottom: 0.2rem solid var(--primary-color);
+    border-top: 0.2rem solid var(--primary-color);
+    width: 100%;
+}
+
+
+.margin-bottom{
+    margin-bottom: 2rem;
+}
+
+.list-mov {
+    width: 100%;
+    border: 0.8rem double var(--primary-color);
+    margin: 0;
+    padding: 0;
+}
+
+.list-mov-button {
+    width: 100%;
+    text-align: start;
+    font-size: 1.5rem;
+}
+
+.group-of-moviments li {
+    list-style: none;
+}
+
+.capacity-collapsible{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.movement-list {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    max-height: 20rem;
+    padding: 2rem;
+    overflow-y: auto;
+    width: 100%;
+    padding-top: 0.5rem;
+}
+
+.movement-description {
+    text-align: start !important;
+    word-break: break-word;
+    font-size: 1.1rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    text-align: justify;
+    display: flex;
+    min-width: 97%;
+}
+
+.movement-name{
+    text-align: start !important;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.editable-text-container--mov {
+    margin-left: 2rem;
+    margin-bottom: 2rem;
+    margin-top: 0;
+}
+
+.new-moviment-btn {
+    width: 10rem;
+    padding: 0.5rem;
+    align-self: center;
+}
+
+.name-container--mov{
+    display: flex;
+}
+
+.aggregated-gliph-buttons--mov {
+    margin-left: 2rem;
+    display: flex;
+    gap:1rem;
+}
+
+.aggregated-gliph-buttons--mov button {
+    padding: 10px;
+    padding-top: 0;
+    padding-bottom: 0;
+    width: 2rem;
+    height: 2rem;
+}
+
+.roll-mov-button--mov{
+    font-size: 1rem !important;
+}
+
+.asdd2{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    flex-direction: column;
+    align-items: flex-start !important;
+    width: 100%;
+}
+
+.combinated-capacities--mov{
+    margin: 0.1rem;
+    margin-left: 4.5rem;
+}
+
+.combinated-capacities--mov-p {
+    font-size: 1.3rem;
+    margin-left: 1rem;
+}
+
+.combinated-capacities--mov button {
+    padding: 0.5rem;
+    margin-left: 2rem;
+}

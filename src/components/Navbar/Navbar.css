@@ -1,0 +1,24 @@
+.jump-modal {
+    position: fixed;
+    display: block;
+    max-width: 30%;
+    top: 2rem;
+    left: 28rem;
+    font-size: calc(8px + 0.5vw);
+}
+
+.jump-modal button {
+    display: block;
+    width: 100%;
+}
+
+
+@media screen and (max-width: 780px) {
+    .jump-modal {
+        left: 50%;
+        top: 16rem;
+        max-width: 80%;
+        font-size: calc(12px + 0.5vw);
+        transform: translate(-50%, -50%);
+    }
+}

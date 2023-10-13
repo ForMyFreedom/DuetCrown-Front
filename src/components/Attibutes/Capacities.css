@@ -1,0 +1,141 @@
+.blink {
+  animation: blink 0.5s;
+}
+
+.no-scroll {
+  overflow: hidden;
+}
+
+.update-modal{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.update-modal button{
+  display: flex;
+  align-items: center;
+}
+
+@keyframes blink {
+  50% {
+    background-color: var(--primary-color);
+  }
+  100% {
+    background-color: #242424;
+  }
+}
+
+.list-atr {
+  width: 100%;
+  border: 0.8rem double var(--primary-color);
+  margin: 0;
+  padding: 0;
+}
+
+.list-heading {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  max-width: 80%;
+  margin: auto;
+  margin-bottom: 1rem;
+}
+
+.list-atr div {
+  display: flex;
+  align-items: center;
+}
+
+.list-atr p, .list-atr-p {
+  margin: 0rem;
+  margin-top: -1rem;
+  margin-bottom: -1rem;
+  font-size: 3rem;
+  --customExtraOffset: 50
+}
+
+.list-atr div b, .list-atr-div-b {
+  text-align: center;
+  font-size: 1.54rem;
+}
+
+.list-atr-div-b{
+  position: relative;
+  font-weight: bold;
+  z-index: 999;
+}
+
+.grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1rem;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.cifras-result {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.text-result {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.multi-render {
+  display: flex;
+  min-width: 100%
+}
+
+.challenge {
+  color: rgb(165, 165, 165);
+  display: flex;
+  width: 100%;
+}
+
+.multi-render {
+  display: flex;
+  flex: 20%;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.multi-render-bigger {
+  display: flex;
+  flex: 50%;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+@media screen and (max-width: 813px) {
+  .full-box {
+    padding: 1rem;
+    padding-top: 0;
+    flex-direction: column;
+    padding-bottom: 0;
+    align-items: center;
+  }
+
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .list-atr div b, .list-atr-div-b {
+    font-size: 1rem;
+  }
+  
+  .list-atr p, .list-atr-p {
+    font-size: 2rem;
+    --customExtraOffset: 0
+  }
+
+  .cifras-result {
+    font-size: 2rem;
+  }
+}
+

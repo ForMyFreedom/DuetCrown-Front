@@ -1,0 +1,28 @@
+.principal-minuce-text {
+    display: flex;
+    justify-content: center;
+    font-style: bold;
+    -webkit-text-stroke: 1px;
+    font-size: 1.5rem;
+}
+
+.secondary-minuce-text {
+    display: flex;
+    justify-content: center;
+    font-style: italic;
+    font-size: 1.25rem;
+}
+
+.bad-gliph-effect {
+    text-decoration: line-through;
+}
+
+.list ul {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 2rem;
+}
+
+.list ul div {
+    margin: 0 auto;
+}

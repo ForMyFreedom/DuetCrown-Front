@@ -1,0 +1,248 @@
+
+.navbar {
+  background-color: var(--primary-color);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+  border: 0;
+  font-size: 12px !important;
+  line-height: 1.42857143 !important;
+  letter-spacing: 4px;
+  border-radius: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  -webkit-box-shadow: 0 1rem 1rem 1rem rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1rem 1rem 1rem rgba(0, 0, 0, 0.2);
+}
+
+.navbar-options{
+  display: flex;
+  gap: 1rem;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+.header {
+  margin-left: 1.5rem;
+}
+
+.container {
+  display: block;
+  padding: 2rem;
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+}
+
+.players-name {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0;
+}
+
+.players-nick-name {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-weight: normal;
+  font-style: italic;
+  font-size: 1.5rem;
+  letter-spacing: 0.4rem;
+  max-width: 30%;
+  margin: 0 auto;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.special-container {
+  flex-direction: column;
+  flex-wrap: nowrap !important;
+}
+
+.margin-auto{
+  margin: auto!important;
+}
+
+.full-box {
+  display: flex;
+  text-align: center;
+  padding-bottom: 0;
+
+  padding: 2rem;
+  border-radius: 2rem;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  padding-top: 0;
+  scroll-margin-top: 10rem;
+}
+
+.container span {
+  scroll-margin-top: 15vh;
+}
+
+.half-box {
+  display: flex;
+  text-align: center;
+  padding: 2rem;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+
+/* Media queries */
+@media screen and (max-width: 780px) {
+  .navbar {
+    display: block;
+    align-items: center;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    letter-spacing: 2px;
+  }
+
+  .navbar-options {
+    justify-content: center;
+  }
+
+  .header {
+    margin-left: 0rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .container {
+    padding: 1rem;
+    margin-top: 7rem;
+    margin-bottom: 3rem;
+  }
+
+  .players-nick-name {
+    max-width: 100%;
+  }
+
+  .navbar-options {
+    margin-right: 0;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .container {
+    margin-top: 10rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .navbar {
+    font-size: 2rem;
+    display: block;
+    align-items: center;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    letter-spacing: 2px;
+  }
+
+  .header {
+    font-size: 2rem;
+    margin-left: 0rem;
+  }
+
+  .players-nick-name {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+  }
+}
+
+
+.big-hover img:hover {
+  -webkit-text-stroke: 2rem var(--primary-color);
+  cursor: pointer;
+}
+
+.mid-hover:hover {
+  -webkit-text-stroke: 0.09rem var(--primary-color);
+  cursor: pointer;
+}
+
+.small-hover:hover {
+  -webkit-text-stroke: 0.03rem var(--primary-color);
+  cursor: pointer;
+}
+
+.image:hover {
+  border: 0.5rem double var(--primary-color);
+  cursor: pointer;
+}
+
+
+
+.list {
+  list-style: none;
+  border: 0.8rem double var(--primary-color);
+  margin: 0;
+  padding: 0;
+  width: 50%;
+  padding-bottom: 2rem;
+}
+
+.list-heading {
+  font-size: 1.8rem;
+  padding-top: 2rem;
+  font-weight: bold;
+}
+
+.list-heading div {
+  display: block;
+}
+
+.attribute-text:hover {
+  -webkit-text-stroke: 0.03rem var(--primary-color);
+}
+
+.attribute-text {
+  display: flex;
+  justify-content: center;
+}
+
+.list div, .attribute-text {
+  margin: auto;
+  font-size: 1.2rem;
+  max-width: 90%;
+}
+
+.attribute-text-2{
+  margin-bottom: 0rem;
+  font-size: 1.2rem;
+  max-width: 80%;
+}
+
+@media screen and (max-width: 960px) {
+  .list-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .list {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 0rem;
+  }
+
+  .list-heading {
+    padding-top: 0rem;
+  }
+
+  .half-box {
+    padding: 1rem;
+    flex-direction: column;
+    padding-top: 0;
+    padding-bottom: 0;
+    align-items: center;
+  }
+  
+  .list div, .attribute-text {
+    font-size: 1rem;
+    max-width: 95%;
+  }
+}
+
+
+

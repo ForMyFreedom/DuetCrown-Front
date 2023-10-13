@@ -1,0 +1,13 @@
+.anotation-area {
+  width: 90%;
+  min-height: calc(30vw);
+  font-size: calc(12px + 0.5vw);
+  padding: 1rem;
+}
+
+@media screen and (max-width: 580px) {
+  .anotation-area {
+    padding: 0.5rem;
+    width: 80%;
+  }
+}

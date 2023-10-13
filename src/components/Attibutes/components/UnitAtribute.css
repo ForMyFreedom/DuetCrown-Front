@@ -1,0 +1,119 @@
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  flex: 20%
+}
+
+.unit-button-roll{
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  margin-right: 1rem;
+}
+
+.grid-item-bigger{
+  flex: 30%
+}
+
+.apply-number-in-unit{
+  display: block;
+}
+
+.grid-item b, .grid-item-b {
+  font-size: 1.2rem;
+  text-wrap: nowrap;
+}
+
+.big-text {
+  width: 100%;
+  font-size: clamp(1rem, calc(1rem + 2vw), 5rem);
+  margin: 0;
+}
+
+.internal-grid-item {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 0;
+}
+
+.internal-grid-item button {
+  font-size: 2rem;
+  padding: 0.7rem;
+  height: 80%;
+  line-height: 0%;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.challenge button {
+  height: 60%;
+}
+
+.special-hope {
+  animation: special-hope 1s;
+  animation-fill-mode: forwards;
+}
+
+.special-despair {
+  animation: special-despair 1s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes special-hope {
+  100% {
+    background-color: #ffffff;
+  }
+}
+
+@keyframes special-despair {
+  100% {
+    background-color: #000000;
+  }
+}
+
+
+.level-description {
+  text-align: center;
+  font-style: italic;
+  font-weight: normal;
+  font-size: calc(12px + 0.5vw);
+}
+
+
+.internal-grid-item button:focus {
+  outline: none;
+}
+
+.grid-item-p-hover {
+  user-select: none;
+  cursor: pointer;
+}
+  
+.grid-item-p-hover:hover {
+  -webkit-text-stroke: 0.1rem var(--primary-color);
+}
+
+@media screen and (max-width: 580px) {
+  .grid-item {
+    flex: 50%
+  }
+
+  .big-text {
+    font-size: 3rem;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .big-text {
+    font-size: 2rem;
+  }
+
+  .minify {
+    padding: 0;
+  }
+}

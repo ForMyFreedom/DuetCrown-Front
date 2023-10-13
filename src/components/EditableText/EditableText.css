@@ -1,0 +1,15 @@
+
+.editable-text-area {
+    border: none;
+    outline: none;
+    text-align: center;
+    text-wrap: nowrap;
+}
+
+.editable-text textarea {
+    text-align: center;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    resize: none;
+    overflow: hidden;
+    max-width: 100%;
+}
