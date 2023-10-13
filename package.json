@@ -2,6 +2,9 @@
   "name": "duet-crown",
   "private": true,
   "version": "0.0.0",
+  "engines": {
+    "node": "18.12.x"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
