@@ -8,7 +8,7 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
 };
 
 const Anotation: React.FC<Props> = ({ user, setUser }) => {
-  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setUser({...user, anotations: event.target.value})
   };
 
