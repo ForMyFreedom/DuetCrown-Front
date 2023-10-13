@@ -13,7 +13,7 @@ const ApplyNumberInUnit: React.FC<Props> = ({ data, setData, decrease, increase,
     const [isHolding, setIsHolding] = useState(false)
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
     const [mod, setMod] = useState<number|string>(-2)
-    let timeoutId: number;
+    let timeoutId: NodeJS.Timeout;
 
     const update = () => {
         if(!isNaN(Number(mod))) {
