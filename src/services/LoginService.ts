@@ -10,6 +10,8 @@ class LoginService {
 
         const data = { name: name, password: password };
 
+        console.log(`${API_URL}/login`)
+
         return axios.post(`${API_URL}/login`, data, { headers });
     }
 }
