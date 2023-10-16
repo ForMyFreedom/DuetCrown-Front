@@ -75,6 +75,7 @@ const Navbar: React.FC<Props> = ({ userRef, jumpRefs, navigate }) => {
   const logout = () => {
     localStorage.removeItem(AUTH_CODE)
     localStorage.removeItem(PLAYER_ID_CODE)
+    localStorage.removeItem(PLAYER_CODE)
     navigate('/login')
   }
   

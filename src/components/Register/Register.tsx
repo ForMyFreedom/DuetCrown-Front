@@ -21,8 +21,6 @@ const Register = () => {
     const password = castEvent.currentTarget.password.value
     const repeatPassword = castEvent.currentTarget.repeatPassword.value
 
-    console.log(password, ' ', repeatPassword)
-
     if(password !== repeatPassword) {
       setIsLoading(false)
       setError('Senhas não conferem')
