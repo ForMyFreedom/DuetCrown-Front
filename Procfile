@@ -1,1 +1,0 @@
-web: cd dist && serve
