@@ -12,6 +12,11 @@
     width: 100%;
 }
 
+.button-group--nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
 
 @media screen and (max-width: 780px) {
     .jump-modal {

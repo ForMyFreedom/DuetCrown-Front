@@ -11,6 +11,10 @@ type Props = {
 const Minuces: React.FC<Props> = ({ user, setUser }) => {
   const [minucies, setMinucies] = useState(user.minucies)
 
+  useEffect(()=>{
+    setMinucies(user.minucies)
+  }, [user.minucies])
+
   useEffect(() => {
     setUser(prevUser => {
       const newUser = { ...prevUser, minucies };

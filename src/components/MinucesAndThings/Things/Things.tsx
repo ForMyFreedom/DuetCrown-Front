@@ -12,6 +12,10 @@ type Props = {
 const Things: React.FC<Props> = ({ user, setUser }) => {
   const [things, setThings] = useState(user.things)
 
+  useEffect(()=>{
+    setThings(user.things)
+  }, [user.things])
+
   useEffect(() => {
     setUser(prevUser => {
       const newUser = { ...prevUser, things };

@@ -12,6 +12,10 @@ type Props = {
 const EvolutionsAndExtensions: React.FC<Props> = ({ user, setUser }) => {
   const [extensions, setExtensions] = useState(user.extensions);
 
+  useEffect(()=>{
+    setExtensions(user.extensions)
+  }, [user.extensions])
+
   const handleExtensionNameChange = (index: number, name: string) => {
     setExtensions(prevExtensions => {
       const newExtensions = [...prevExtensions];

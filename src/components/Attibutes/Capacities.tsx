@@ -35,6 +35,11 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
 
   const [peculiarCapacities, setPeculiarCapacities] = useState<Capacities['peculiars']>(user.capacities.peculiars)
 
+
+  useEffect(()=> {
+    setPeculiarCapacities(user.capacities.peculiars)
+  }, [user.capacities.peculiars])
+
   useEffect(() => {
     setUser(prevUser => {
       const newCapacities = { ...prevUser.capacities, peculiars: peculiarCapacities };

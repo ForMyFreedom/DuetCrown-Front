@@ -10,6 +10,7 @@ const Register = () => {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
 
   const submitRegister = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -59,7 +60,7 @@ const Register = () => {
   }
 
   return (
-    <div className='login'>
+    <div className='register'>
       <h1 className='header-text'>DuetCrown</h1>
       <h1 className='header-login'>Registro</h1>
       <form className='login-form' onSubmit={submitRegister}>
@@ -76,7 +77,13 @@ const Register = () => {
         <label className='login-label'  htmlFor='repeatPassword'>Repetir Senha</label>
         <input className='login-input'  type='password' id='repeatPassword' />
         <label className='login-label'  htmlFor='image'>Link da Imagem:</label>
-        <input className='login-input'  type='url' id='image' />
+        <input className='login-input'  type='url' id='image' onChange={(e)=>setImageUrl(e.target.value)} />
+        <div className="image">
+          <img src={imageUrl} />
+        </div>
+        <p className='image-comment--register'>
+          Você poderá ajustar a escala e o deslocamento da imagem posteriormente
+        </p>
 
         <button className='login-button' type='submit'>Registrar-se</button>
       </form>

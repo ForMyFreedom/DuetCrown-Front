@@ -87,7 +87,8 @@
 
 .multi-render {
   display: flex;
-  min-width: 100%
+  min-width: 100%;
+  align-items: stretch;
 }
 
 .challenge {
@@ -107,7 +108,6 @@
   display: flex;
   flex: 50%;
   flex-wrap: wrap;
-  align-items: center;
 }
 
 @media screen and (max-width: 813px) {

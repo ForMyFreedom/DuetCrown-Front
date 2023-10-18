@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState, ReactElement } from 'react';
+import React, { useCallback, useMemo, useRef, useState, ReactElement, useEffect } from 'react';
 import '../Attibutes/Capacities.css'
 import './Stats.css'
 import { Capacities, ExtendedSignal, Gliph, Player, Stat, getGliphAfterMod, solveDMG, subtractGliphs } from '../../UserDomain'
@@ -31,6 +31,14 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
       return 100
     }
   }, [stats])
+
+  useEffect(() => {
+    setUser(prevUser => {return {...prevUser, stats: stats}})
+  }, [setUser, stats])
+
+  useEffect(()=>{
+    setStats(user.stats)
+  }, [user.stats])
 
   const setLifePercentage = useCallback((v: number) => {
     setStats(prevStat => {
@@ -100,7 +108,7 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
     for(const stat of stats) {
       const statInPlayer = filteredStats.find(s => s.kind==stat.kind && s.relativeCapacity==stat.relativeCapacity)
       if(statInPlayer){
-        stat.naturalMod = statInPlayer.naturalMod
+        statInPlayer.naturalMod = stat.naturalMod
       }
     }
     return filteredStats
@@ -118,16 +126,20 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
 
   const handleSetStat = (oldStat: Stat, gliph: Gliph) => {
     setStats(prevStats => {
+      const relativeCapacity = getGliphFromCapacityName(user, oldStat.relativeCapacity)
+      if(!relativeCapacity) { return prevStats }
+      const newSignal = subtractGliphs(gliph, relativeCapacity)
+
       const newStats = [...prevStats]
+
       for(const stat of newStats) {
         if(stat.kind==oldStat.kind && stat.relativeCapacity==oldStat.relativeCapacity) {
-          const relativeCapacity = getGliphFromCapacityName(user, stat.relativeCapacity)
-          if(relativeCapacity) {
-            const newStat = subtractGliphs(gliph, relativeCapacity)
-            stat.naturalMod = newStat
-          }
+          stat.naturalMod = newSignal
+          return newStats
         }
       }
+      // If comes here, means that the state was not found
+      newStats.push({kind: oldStat.kind, relativeCapacity: oldStat.relativeCapacity, naturalMod: newSignal})
       return newStats
     })
   }
