@@ -84,6 +84,7 @@ export type ImagePlayerData = {
 export type StringRelation = {[key: string]: string}
 
 export type Player = {
+  id: number
   name: string
   nickname: string
   primaryColor: string

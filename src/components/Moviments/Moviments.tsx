@@ -32,6 +32,9 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
   const [,setExtraResult] = extraResultDuo
   const [,setTextResult]  = textResultDuo
 
+  useEffect(()=>{
+    setMoviments(user.moviments)
+  }, [user.moviments])
 
   const movimentsPerCapacities: {[key: string]: Moviment[]} = useMemo(()=>{
     const list: {[key: string]: Moviment[]} = { combined: []
@@ -269,6 +272,7 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
                           dataSetter={(v:string)=>handleChangeDescription(v, mov)}
                           className="movement-description"
                           ignoreEnter={true}
+                          fullWidth={true}
                       />
                     </div>
                   </li>

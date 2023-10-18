@@ -29,6 +29,11 @@ const IdentityAndSummary: React.FC<Props> = ({ user, setUser }) => {
     })
   }, [summary, setUser])
 
+  useEffect(()=>{
+    setIdentity(user.identity)
+    setSummary(user.sumary)
+  }, [user.identity, user.sumary])
+
 
   const addMoreIdentity = () => {
     setIdentity(prevIdentity => {

@@ -104,7 +104,7 @@ function App() {
 
   return (
     <div>
-      <Navbar userRef={userRef} jumpRefs={jumpRefs} navigate={navigate}/>
+      <Navbar userRef={userRef} setUser={setUser} jumpRefs={jumpRefs} navigate={navigate}/>
       <ToastContainer />
       <div className="container">
         <span ref={jumpRefs[0]}>
@@ -157,6 +157,7 @@ export default App;
 
 const BLANK_PLAYER: Player = {
   "primaryColor": "##ffffff",
+  "id": 0,
   "image": {
     "url": "",
     "xDesloc": 0,

@@ -17,6 +17,13 @@ const PlayerImage: React.FC<Props> = ({ user, setUser }) => {
   const root = document.documentElement;
   const modalRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    setImageUrl(user.image.url);
+    setXDesloc(user.image.xDesloc)
+    setYDesloc(user.image.yDesloc)
+    setScale(user.image.scale)
+  }, [user.image.scale, user.image.url, user.image.xDesloc, user.image.yDesloc])
+
   const trueScale = useMemo(()=>{
     return scale*10
   }, [scale])

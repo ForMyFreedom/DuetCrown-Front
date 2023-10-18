@@ -7,9 +7,10 @@ type EditableTextProps = React.HTMLAttributes<HTMLDivElement> & {
     extraTextRender?: (value: string) => string;
     filter?: (value: string) => string;
     ignoreEnter?: boolean;
+    fullWidth?: boolean
 };
 
-const EditableText: React.FC<EditableTextProps> = ({ text, filter, dataSetter, extraTextRender, ignoreEnter, ...props }) => {
+const EditableText: React.FC<EditableTextProps> = ({ text, filter, dataSetter, extraTextRender, ignoreEnter, fullWidth, ...props }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedText, setEditedText] = useState(text);
     const textareaRef = useRef<HTMLInputElement>(null);
@@ -79,7 +80,7 @@ const EditableText: React.FC<EditableTextProps> = ({ text, filter, dataSetter, e
     }, [height, ignoreEnter, isEditing, width])
 
     return (
-        <div className="editable-text">
+        <div className="editable-text" style={fullWidth?{width: '100%'}:{}}>
             {isEditing ? (
                 <textarea
                     value={editedText}
