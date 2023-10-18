@@ -145,6 +145,7 @@ export function subtractGliphs(firstGliph: Gliph, secondGliph: Gliph): ExtendedS
   return SignalsConst[dif]
 }
 
+
 export function solveDMG(vitGliph: Gliph, dmgGliph: Gliph): number {
   const vitIndex = GliphConst.indexOf(vitGliph)
   const dmgIndex = GliphConst.indexOf(dmgGliph)
