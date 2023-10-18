@@ -147,8 +147,10 @@ const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate }) => {
           <button onClick={refreshUser}>Recarregar</button>
         </div>
         <div className='button-group--nav'>
-          <a href='#' onClick={downloadBackup}>   <button>Baixar Backup</button> </a>
-          <a href='#' onClick={()=>{}}>
+          <a onClick={downloadBackup}>
+            <button>Baixar Backup</button>
+          </a>
+          <a>
             <button onClick={handleInsertBackup}> Enviar Backup </button>
             <input ref={fileInputRef}  style={{display: 'none'}} type="file" onChange={(e) => showFile(e)} />
           </a>
