@@ -37,6 +37,7 @@ const Register = () => {
       password: castEvent.currentTarget.password.value,
       repeatPassword: castEvent.currentTarget.repeatPassword.value,
       image: castEvent.currentTarget.image.value,
+      registerToken: castEvent.currentTarget.registerToken.value
     }
     
     RegisterService.register(form)
@@ -62,6 +63,8 @@ const Register = () => {
       <h1 className='header-text'>DuetCrown</h1>
       <h1 className='header-login'>Registro</h1>
       <form className='login-form' onSubmit={submitRegister}>
+        <label className='login-label'  htmlFor='registerToken'>Token de Registro</label>
+        <input className='register-token'  type='text' id='registerToken' />
         <label className='login-label'  htmlFor='name'>Nome do Personagem</label>
         <input className='login-input'  type='text' id='name' />
         <label className='login-label'  htmlFor='nickname'>Título</label>

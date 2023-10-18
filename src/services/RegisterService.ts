@@ -11,6 +11,7 @@ export type RegisterForm = {
     password: string
     repeatPassword: string
     image: string
+    registerToken: string
 }
 
 class RegisterService {
