@@ -1,6 +1,6 @@
 .stat-flex-box {
     display: flex;
-    flex: 1;
+    flex: 20%;
     flex-direction: column;
     align-items: normal !important;
 }
