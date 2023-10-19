@@ -1,1 +1,1 @@
-web: serve dist/index.html
+web: npm run serve-heroku
