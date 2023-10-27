@@ -21,6 +21,7 @@ export const PLAYER_ID_CODE = 'player_id'
 const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate }) => {
   const [isJumpModalOpen, setIsJumpModalOpen] = useState(false)
   const fileInputRef: RefObject<HTMLInputElement> = useRef(null);
+  const menuOption = useRef<HTMLDivElement>(null);
 
   const [isSafeMode, setIsSafeMode] = useState<boolean>(
     localStorage.getItem(SAFE_MODE_CODE) ? Boolean(Number(localStorage.getItem(SAFE_MODE_CODE))) : false
@@ -33,6 +34,21 @@ const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate }) => {
       window.removeEventListener('beforeunload', handleBeforeUnloadCallback);
     };
   }, [isSafeMode, userRef]);
+
+  /* // @@@
+  window.onscroll = function() {scrollFunction()};
+
+  function scrollFunction() {
+    const scrollPosition = Math.max(document.body.scrollTop, document.documentElement.scrollTop)
+    if (menuOption?.current) {
+      const distanceFromTop = menuOption.current.offsetTop - scrollPosition
+      console.log(distanceFromTop)
+      const opacity = 1 - Math.max(0, (10 - distanceFromTop) / 100)
+      menuOption.current.style.opacity = opacity.toString()
+      menuOption.current.style.width = opacity.toString()
+    }
+  }
+  */
 
   const updateUser = () => {
     const id = localStorage.getItem(PLAYER_ID_CODE)
@@ -126,7 +142,7 @@ const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate }) => {
   }
 
   return (
-    <div className="navbar">
+    <div className="navbar" id='navbar'>
       <h1 className="header mid-hover" onClick={()=>setIsJumpModalOpen(!isJumpModalOpen)}>Ficha DuetCrown</h1>
       {isJumpModalOpen &&
       <div className='jump-modal'>
@@ -141,7 +157,7 @@ const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate }) => {
         <button onClick={()=>jumpTo(8)}>Anotações</button>
       </div>
       }
-      <div className="navbar-options">
+      <div ref={menuOption} className="navbar-options">
         <div className='button-group--nav'>
           <button onClick={updateUser}>Atualizar</button>
           <button onClick={refreshUser}>Recarregar</button>

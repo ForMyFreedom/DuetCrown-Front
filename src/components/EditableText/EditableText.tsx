@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import './EditableText.css';
 
 type EditableTextProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -13,57 +13,31 @@ type EditableTextProps = React.HTMLAttributes<HTMLDivElement> & {
 const EditableText: React.FC<EditableTextProps> = ({ text, filter, dataSetter, extraTextRender, ignoreEnter, fullWidth, ...props }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedText, setEditedText] = useState(text);
-    const textareaRef = useRef<HTMLInputElement>(null);
+    const textareaRef = useRef<HTMLSpanElement>(null);
     const spanRef = useRef<HTMLSpanElement>(null);
-    const [width, setWidth] = useState(0)
-    const [height, setHeight] = useState(0)
-
+    
     useEffect(() => {
-        setEditedText(text)
+        setEditedText(prevText => prevText !== text ? text : prevText)
     }, [text])
-
-
-    const handleTextClick = () => {
-        if(spanRef.current) {
-            setWidth(spanRef.current.offsetWidth)
-            setHeight(spanRef.current.offsetHeight)
-        }
-        setIsEditing(true);
-    };
-
-    const getFinalText = () => {
+    
+    const finalText = useMemo(() =>  {
         if (extraTextRender) {
             return extraTextRender(editedText);
         }
         return editedText;
-    };
-
-    const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if(filter) {
-            setEditedText(filter(event.target.value));
-        } else {
-            setEditedText(event.target.value);
-        }
-    };
-
+    }, [editedText, extraTextRender])
 
     const handleTextBlur = () => {
         setIsEditing(false);
-        dataSetter(editedText)
+        const finalText = filter
+            ? filter(textareaRef.current?.innerText || '')
+            : textareaRef.current?.innerText || ''
+
+        dataSetter(finalText)
+        setEditedText(finalText)
     };
 
-
     useEffect(() => {
-        if (textareaRef.current) {
-            const style = getComputedStyle(textareaRef.current)
-            const extraOffset = Number(style.getPropertyValue('--customExtraOffset'))
-            textareaRef.current.style.width = `${width+10+extraOffset}px`;
-            textareaRef.current.style.height = `${height}px`;
-            textareaRef.current.focus();
-            textareaRef.current.setSelectionRange(0, 0);
-            textareaRef.current.select();
-        }
-
         const handleKeyDown = (event: KeyboardEvent) => {
             if ((!ignoreEnter && event.key === 'Enter') || event.key === 'Escape') {
                 textareaRef.current?.blur()
@@ -71,30 +45,42 @@ const EditableText: React.FC<EditableTextProps> = ({ text, filter, dataSetter, e
         };
     
         if (textareaRef.current) {
+            textareaRef.current.focus()
+            selectComponent(textareaRef.current)
             if(isEditing) {
                 textareaRef.current.addEventListener('keydown', handleKeyDown);
             } else {
                 textareaRef.current.removeEventListener('keydown', handleKeyDown);
             }
         }
-    }, [height, ignoreEnter, isEditing, width])
+    }, [ignoreEnter, isEditing])
 
     return (
         <div className="editable-text" style={fullWidth?{width: '100%'}:{}}>
             {isEditing ? (
-                <textarea
-                    value={editedText}
+                <span
+                    contentEditable
                     className={`editable-text-area ${props.className}`}
-                    onChange={handleTextChange}
                     ref={textareaRef}
                     onClick={(event) => event.stopPropagation()}
                     onBlur={handleTextBlur}
-                />
+                    suppressContentEditableWarning={true}
+                >
+                    {editedText}
+                </span>
             ) : (
-                <span ref={spanRef} className={props.className} onClick={handleTextClick}>{getFinalText()}</span>
+                <span ref={spanRef} onClick={() => setIsEditing(true)} className={props.className}>{finalText}</span>
             )}
         </div>
     );
 };
+
+function selectComponent(component: HTMLElement) {
+    const range = document.createRange();
+    range.selectNodeContents(component);
+    const sel = window.getSelection()!;
+    sel.removeAllRanges();
+    sel.addRange(range);
+}
 
 export default EditableText;

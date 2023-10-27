@@ -51,7 +51,7 @@
   margin: 0rem;
   margin-top: -1rem;
   margin-bottom: -1rem;
-  font-size: 3rem;
+  font-size: clamp(1rem, 8vw, 50px);
   --customExtraOffset: 50
 }
 
@@ -131,7 +131,6 @@
   }
   
   .list-atr p, .list-atr-p {
-    font-size: 2rem;
     --customExtraOffset: 0
   }
 

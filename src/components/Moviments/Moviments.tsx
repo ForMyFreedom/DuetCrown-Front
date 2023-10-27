@@ -11,6 +11,7 @@ import AttributeHandler from '../Attibutes/abstract/AttributeHandler';
 import { ResultTextOptions } from '../Attibutes/components/definitions';
 import UnitChallenge from '../Attibutes/components/UnitChallenge';
 import UnitButtonRoll from '../Attibutes/components/UnitButtonRoll';
+import { isEqualArray } from '../../utils';
 
 interface Props {
   user: Player;
@@ -33,7 +34,9 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
   const [,setTextResult]  = textResultDuo
 
   useEffect(()=>{
-    setMoviments(user.moviments)
+    setMoviments(prevMov => {
+      return isEqualArray(prevMov, user.moviments) ? prevMov : user.moviments
+    })
   }, [user.moviments])
 
   const movimentsPerCapacities: {[key: string]: Moviment[]} = useMemo(()=>{

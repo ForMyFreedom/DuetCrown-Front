@@ -7,6 +7,7 @@ import { TRANSLATE_BASIC_ATRIBUTE, TRANSLATE_KIND_ATRIBUTE, TRANSLATE_SPECIAL } 
 import UnitPrimal, { PrimalKind } from './components/UnitPrimal';
 import AttributeHandler from './abstract/AttributeHandler';
 import { ResultTextOptions } from './components/definitions';
+import { isEqualObject } from '../../utils';
 
 
 
@@ -35,9 +36,10 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
 
   const [peculiarCapacities, setPeculiarCapacities] = useState<Capacities['peculiars']>(user.capacities.peculiars)
 
-
-  useEffect(()=> {
-    setPeculiarCapacities(user.capacities.peculiars)
+  useEffect(()=>{
+    setPeculiarCapacities(prevCap => {
+      return isEqualObject(prevCap, user.capacities.peculiars) ? prevCap : user.capacities.peculiars
+    })
   }, [user.capacities.peculiars])
 
   useEffect(() => {

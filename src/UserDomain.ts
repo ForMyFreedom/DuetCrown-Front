@@ -7,7 +7,7 @@ export type Gliph = `${Letter}${Signal}`
 
 export const GliphConst: Gliph[] = ['FF-', 'FF', 'FF+', 'F-', 'F', 'F+', 'E-', 'E', 'E+', 'D-', 'D', 'D+', 'C-', 'C', 'C+', 'B-', 'B', 'B+', 'A-', 'A', 'A+', 'S-', 'S', 'S+', 'SS-', 'SS', 'SS+']
 export const SignalsConst: ExtendedSignal[] = ['-🌎🌎', '-🌎---', '-🌎--', '-🌎-', '-🌎', '---', '--', '-', '', '+', '++', '+++', '+🌎', '+🌎+', '+🌎++', '+🌎+++', '+🌎🌎']
-
+export const StatConst: Stat['kind'][] = ['VIT', 'DMG', 'DEF', 'ATK']
 
 export type Capacities = {
   basics: {
@@ -63,14 +63,15 @@ export type Thing = {
   name: string
   description: string
   relativeCapacity?: string
-  gliph?: Gliph
+  gliph: Gliph | ''
+  equiped: boolean
 }
 
 export type Minucie = {
-  // Desing: NAME [EXTRANAME?]: DESCRIPTION
   name: string
-  extraName?: string
+  relative?: string
   description: string
+  applicated?: boolean
 }
 
 export type ImagePlayerData = {
@@ -100,13 +101,29 @@ export type Player = {
   things: Thing[]
   minucies: Minucie[]
   anotations: string
+  /*
+  bonus: {
+    capacities: {
+      [CapGrop in keyof Omit<Partial<Capacities>, 'primal'>]: Partial<Capacities[CapGrop]>
+    }
+    stats: Stat[]
+  }
+  vantage: {
+    capacities: {
+      [CapGrop in keyof Omit<Partial<Capacities>, 'primal'>]: {
+        [Cap in keyof Partial<Capacities[CapGrop]>]: number
+      }
+    }
+    stats: (Omit<Stat, 'naturalMod'> & {value: number})[]
+  }
+  */
 }
 
 export function isGliphInConformity(personalGliph: Gliph, otherGliph: Gliph): boolean {
   return GliphConst.indexOf(personalGliph) <= GliphConst.indexOf(otherGliph)
 }
 
-export function isGliphInRegularity(personalGliph: Gliph|undefined, otherGliph: Gliph|undefined): string {
+export function isGliphInRegularity(personalGliph: Gliph|''|undefined, otherGliph: Gliph|undefined): string {
   if(!personalGliph || !otherGliph) { return '' }
   const glifDif = GliphConst.indexOf(personalGliph) - GliphConst.indexOf(otherGliph)
   if(glifDif>=3){
@@ -185,3 +202,47 @@ export function getMeanOfGliphs(gliphArray: Gliph[]): Gliph {
   const meanIndex = Math.floor(indexArray.reduce((a, b) => a + b, 0) / indexArray.length)
   return GliphConst[meanIndex]
 }
+
+/*
+export function setBonusInRelative(user: Player, bonus: ExtendedSignal|undefined, relative: string|undefined) {
+  if(!bonus || !relative) { return }
+  changeBonusInRelative(true, user, bonus, relative)
+}
+
+
+export function unsetBonusInRelative(user: Player, bonus: ExtendedSignal|undefined, relative: string|undefined) {
+  if(!bonus || !relative) { return }
+  const middleIndex= SignalsConst.indexOf('')
+  const bonusIndex = SignalsConst.indexOf(bonus)
+  const invertedBonus = 2*middleIndex - bonusIndex
+  changeBonusInRelative(false, user, SignalsConst[invertedBonus], relative)
+}
+
+
+function changeBonusInRelative(toSet: boolean, user: Player, bonus: ExtendedSignal, relative: string) {
+  if(Object.keys(user.capacities.peculiars).includes(relative)) {
+    if(toSet){
+      const gliph = user.capacities.peculiars[relative]
+      user.bonus.capacities.peculiars[relative] = getGliphAfterMod(gliph,bonus)
+    } else {
+
+    }
+  }
+  if(Object.keys(user.capacities['basics']).includes(relative)) {
+    if(toSet){
+      const gliph = user.capacities.basics[relative]
+      user.bonus.capacities.basics[relative] = getGliphAfterMod(gliph,bonus)
+    } else {
+      
+    }
+  }
+  if(Object.keys(user.capacities['specials']).includes(relative)) {
+    if(toSet){
+      const gliph = user.capacities.specials[relative]
+      user.bonus.capacities.specials[relative as keyof Player['bonus']['capacities']['specials']] = getGliphAfterMod(gliph,bonus)
+    } else {
+      
+    }
+  }
+}
+*/

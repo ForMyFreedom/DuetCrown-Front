@@ -75,6 +75,7 @@ button:focus-visible {
 
 .text-wrap {
   text-wrap: wrap;
+  word-break: break-all;
 }
 
 @media (prefers-color-scheme: light) {

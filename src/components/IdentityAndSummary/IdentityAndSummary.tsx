@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Player, StringRelation } from '../../UserDomain'
 import './IdentityAndSummary.css'
 import EditableText from '../EditableText/EditableText';
+import { isEqualObject } from '../../utils';
 
 type Dispatch<T> = React.Dispatch<React.SetStateAction<T>>
 
@@ -29,10 +30,38 @@ const IdentityAndSummary: React.FC<Props> = ({ user, setUser }) => {
     })
   }, [summary, setUser])
 
+  useEffect(() => {
+    setIdentity(prevIdentity => {
+      const newIden = Object.entries(prevIdentity).filter(m => m[0] !== '');
+      if(Object.entries(prevIdentity).length != newIden.length){
+        return Object.fromEntries(newIden);
+      }
+      return prevIdentity
+    });
+  }, [setIdentity, identity]);
+
+  useEffect(() => {
+    setSummary(prevSum => {
+      const newSummary = Object.entries(prevSum).filter(m => m[0] !== '');
+      if(Object.entries(prevSum).length != newSummary.length){
+        return Object.fromEntries(newSummary);
+      }
+      return prevSum
+    });
+  }, [setSummary, summary]);
+
   useEffect(()=>{
-    setIdentity(user.identity)
-    setSummary(user.sumary)
-  }, [user.identity, user.sumary])
+    setIdentity(prevIden => {
+      return isEqualObject(prevIden, user.identity) ? prevIden : user.identity
+    })
+  }, [user.identity])
+
+  useEffect(()=>{
+    setSummary(prevSumary => {
+      return isEqualObject(prevSumary, user.sumary) ? prevSumary : user.sumary
+    })
+  }, [user.sumary])
+
 
 
   const addMoreIdentity = () => {

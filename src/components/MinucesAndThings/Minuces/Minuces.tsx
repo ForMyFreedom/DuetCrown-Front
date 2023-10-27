@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../MinucesAndThings.css'
 import { Player } from '../../../UserDomain'
 import EditableText from '../../EditableText/EditableText';
+import { isEqualArray } from '../../../utils';
 
 type Props = {
     user: Player;
@@ -12,7 +13,9 @@ const Minuces: React.FC<Props> = ({ user, setUser }) => {
   const [minucies, setMinucies] = useState(user.minucies)
 
   useEffect(()=>{
-    setMinucies(user.minucies)
+    setMinucies(prevMinu => {
+      return isEqualArray(prevMinu, user.minucies) ? prevMinu : user.minucies
+    })
   }, [user.minucies])
 
   useEffect(() => {
@@ -24,7 +27,7 @@ const Minuces: React.FC<Props> = ({ user, setUser }) => {
 
   const addNewMinuce = () => {
     setMinucies(prevMinucies => {
-      const newMinucies = [...prevMinucies, {name: 'Item', extraName: 'Tipo', description: 'Descrição'}];
+      const newMinucies = [...prevMinucies, {name: 'Traço', relative: 'Relativo?', description: 'Descrição', applicated: true}];
       return newMinucies;
     });
   }
@@ -48,10 +51,10 @@ const Minuces: React.FC<Props> = ({ user, setUser }) => {
     });
   };
 
-  const handleExtraNameChange = (index: number, value: string) => {
+  const handleRelativeChange = (index: number, value: string) => {
     setMinucies(prevMinuces => {
       const newMinuces = [...prevMinuces];
-      newMinuces[index].extraName = value;
+      newMinuces[index].relative = value;
       return newMinuces;
     });
   };
@@ -64,6 +67,14 @@ const Minuces: React.FC<Props> = ({ user, setUser }) => {
     });
   };
 
+  const handleEquipedToggled = (index: number) => {
+    setMinucies(prevMinuces => {
+      const newMinuces = [...prevMinuces];
+      newMinuces[index].applicated = !newMinuces[index].applicated;
+      return newMinuces;
+    });
+  }
+
   return (
     <div className="list">
       <h2 className="list-heading">Minúcias</h2>
@@ -74,11 +85,11 @@ const Minuces: React.FC<Props> = ({ user, setUser }) => {
               dataSetter={(value: string) => {handleNameChange(index, value)}}
               className='principal-minuce-text'
             />
-            {minucie.extraName &&
+            {minucie.relative &&
             <EditableText
-              text={minucie.extraName}
+              text={minucie.relative}
               extraTextRender={(v)=>`[${v}]`}
-              dataSetter={(value: string) => {handleExtraNameChange(index, value)}}
+              dataSetter={(value: string) => {handleRelativeChange(index, value)}}
               className='secondary-minuce-text'
             />
             }
@@ -87,6 +98,7 @@ const Minuces: React.FC<Props> = ({ user, setUser }) => {
               dataSetter={(value: string) => {handleDescriptionChange(index, value)}}
               className='attribute-text'
             />
+            <button onClick={()=>handleEquipedToggled(index)}>{minucie.applicated ? 'Aplicado' : 'Não Aplicado'}</button>
           </ul>
         })}
         <button onClick={addNewMinuce}>Add More</button>

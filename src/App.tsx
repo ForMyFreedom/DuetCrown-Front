@@ -29,7 +29,7 @@ function App() {
     return {basics: user.capacities.basics}
   }, [user?.capacities])
 
-  const especialAtributes: Partial<Capacities> = useMemo(() => {
+  const specialAtributes: Partial<Capacities> = useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { basics, ...otherCapacities } = user.capacities;
     return otherCapacities
@@ -127,7 +127,7 @@ function App() {
           />
         </span>
         <span ref={jumpRefs[3]}>
-          <CapacitiesElement title='specials' baseAtributeData={especialAtributes} className='special-container'
+          <CapacitiesElement title='specials' baseAtributeData={specialAtributes} className='special-container'
             user={user} setUser={setUser} setCapacities={(capa: Capacities) => setUser({...user, capacities: capa})}
             showAddNewAtributeButton={true}
           />
@@ -166,8 +166,8 @@ const BLANK_PLAYER: Player = {
   },
   "name": "",
   "nickname": "",
-  "identity": { },
-  "sumary": { },
+  "identity": {},
+  "sumary": {},
   "capacities": {
     "basics": {
       "strength": "F",
@@ -177,7 +177,7 @@ const BLANK_PLAYER: Player = {
       "senses": "F",
       "charisma": "F",
     },
-    "peculiars": { },
+    "peculiars": {},
     "specials": {
       "ambition": "F",
       "judge": "F",
@@ -200,4 +200,6 @@ const BLANK_PLAYER: Player = {
   },
   "extensions": [],
   "anotations": "",
+  // @bonus: { capacities: {}, stats: [] },
+  // @vantage: { capacities: {}, stats: [] }
 }

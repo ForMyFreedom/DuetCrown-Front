@@ -3,6 +3,7 @@ import '../MinucesAndThings.css'
 import { Gliph, GliphConst, Player, Thing, isGliphInConformity, isGliphInRegularity } from '../../../UserDomain'
 import EditableText from '../../EditableText/EditableText';
 import { getGliphFromCapacityName } from './definitions';
+import { isEqualArray } from '../../../utils';
 
 type Props = {
     user: Player;
@@ -13,7 +14,9 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
   const [things, setThings] = useState(user.things)
 
   useEffect(()=>{
-    setThings(user.things)
+    setThings(prevThings => {
+      return isEqualArray(prevThings, user.things) ? prevThings : user.things
+    })
   }, [user.things])
 
   useEffect(() => {
@@ -25,7 +28,11 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
 
   const addNewThing = () => {
     setThings(prevThings => {
-      const newThings: Thing [] = [...prevThings, {name: 'Item', description: 'Descrição', relativeCapacity: 'Relativo?', gliph: 'FF'}];
+      const newThings: Thing [] = [...prevThings, {
+        name: 'Item', description: 'Descrição',
+        relativeCapacity: 'Relativo?', gliph: 'FF',
+        equiped: true,
+      }];
       return newThings;
     });
   }
@@ -54,6 +61,14 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
       if(!GliphConst.includes(value as Gliph) && value!='') { return prevThings }
       const newThings = [...prevThings];
       newThings[index].gliph = value as Gliph;
+      return newThings;
+    });
+  };
+
+  const handleEquipedToggled = (index: number) => {
+    setThings(prevThings => {
+      const newThings = [...prevThings];
+      newThings[index].equiped = ! newThings[index].equiped;
       return newThings;
     });
   };
@@ -108,15 +123,14 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
               className='attribute-text-2'
             />
             {thing.gliph &&
-            <>
               <EditableText
                 text={thing.gliph}
                 dataSetter={(value: string) => {handleGlyphChange(index, value)}}
                 className={`list-atr-p ${getIsOkGliph(thing) ? '' : 'bad-gliph-effect'}`}
               />
-              <span className='italic'>{isGliphInRegularity(thing.gliph, getGliphFromCapacityName(user, thing.relativeCapacity))}</span>
-            </>
             }
+            <span className='italic'>{isGliphInRegularity(thing.gliph, getGliphFromCapacityName(user, thing.relativeCapacity))}</span>
+            <button onClick={()=>handleEquipedToggled(index)}>{thing.equiped ? 'Equipado' : 'Desequipado'}</button>
           </ul>
         })}
         <button onClick={addNewThing}>Add More</button>

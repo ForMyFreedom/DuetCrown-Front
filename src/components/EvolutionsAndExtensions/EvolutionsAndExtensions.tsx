@@ -3,6 +3,7 @@ import './EvolutionsAndExtensions.css'
 import { Extension, Gliph, Player, Signal } from '../../UserDomain'
 import UnitNumber from '../Attibutes/components/UnitNumber';
 import UnitNumberAndGlyph from '../Attibutes/components/UnitNumberAndGlyph';
+import { isEqualArray } from '../../utils';
 
 type Props = {
     user: Player;
@@ -13,7 +14,9 @@ const EvolutionsAndExtensions: React.FC<Props> = ({ user, setUser }) => {
   const [extensions, setExtensions] = useState(user.extensions);
 
   useEffect(()=>{
-    setExtensions(user.extensions)
+    setExtensions(prevExt => {
+      return isEqualArray(prevExt, user.extensions) ? prevExt : user.extensions
+    })
   }, [user.extensions])
 
   const handleExtensionNameChange = (index: number, name: string) => {
