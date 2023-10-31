@@ -200,6 +200,6 @@ const BLANK_PLAYER: Player = {
   },
   "extensions": [],
   "anotations": "",
-  // @bonus: { capacities: {}, stats: [] },
+  currentMods: [],
   // @vantage: { capacities: {}, stats: [] }
 }

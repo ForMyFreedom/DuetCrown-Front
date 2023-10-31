@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import '../MinucesAndThings.css'
-import { Gliph, GliphConst, Player, Thing, isGliphInConformity, isGliphInRegularity } from '../../../UserDomain'
+import { Gliph, GliphConst, Modification, Player, Thing, isGliphInConformity, isGliphInRegularity } from '../../../UserDomain'
 import EditableText from '../../EditableText/EditableText';
 import { getGliphFromCapacityName } from './definitions';
 import { isEqualArray } from '../../../utils';
+import ModPlayerHandler from '../../ModPlayerHandler/ModPlayerHandler';
 
 type Props = {
     user: Player;
@@ -31,7 +32,7 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
       const newThings: Thing [] = [...prevThings, {
         name: 'Item', description: 'Descrição',
         relativeCapacity: 'Relativo?', gliph: 'FF',
-        equiped: true,
+        applicated: true,
       }];
       return newThings;
     });
@@ -45,8 +46,7 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
       }
       return prevThings
     });
-  }, [setThings, things]);
-
+  }, [setThings, things])
 
   const handleNameChange = (index: number, value: string) => {
     setThings(prevThings => {
@@ -68,7 +68,7 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
   const handleEquipedToggled = (index: number) => {
     setThings(prevThings => {
       const newThings = [...prevThings];
-      newThings[index].equiped = ! newThings[index].equiped;
+      newThings[index].applicated = ! newThings[index].applicated;
       return newThings;
     });
   };
@@ -97,6 +97,14 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
     } else {
       return false
     }
+  }
+
+  const handleModificationChange: (index: number) => (v: Modification[]) => void = (index: number) => {
+    return (v:Modification[]) => setThings(prevThings => {
+      const newThings = [...prevThings];
+      newThings[index].modifications = v;
+      return newThings;
+    })
   }
 
   return (
@@ -129,13 +137,15 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
                 className={`list-atr-p ${getIsOkGliph(thing) ? '' : 'bad-gliph-effect'}`}
               />
             }
-            <span className='italic'>{isGliphInRegularity(thing.gliph, getGliphFromCapacityName(user, thing.relativeCapacity))}</span>
-            <button onClick={()=>handleEquipedToggled(index)}>{thing.equiped ? 'Equipado' : 'Desequipado'}</button>
+            <p className='italic'>{isGliphInRegularity(thing.gliph, getGliphFromCapacityName(user, thing.relativeCapacity))}</p>
+            <button onClick={()=>handleEquipedToggled(index)}>{thing.applicated ? 'Equipado' : 'Desequipado'}</button>
+            <ModPlayerHandler user={user} target={thing} setTarget={handleModificationChange(index)} setUser={setUser} />
           </ul>
         })}
-        <button onClick={addNewThing}>Add More</button>
+        <button onClick={addNewThing}>Adicionar Mais</button>
     </div>
     );
 };
+
 
 export default Things;

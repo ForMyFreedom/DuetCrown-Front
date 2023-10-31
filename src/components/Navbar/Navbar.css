@@ -19,6 +19,11 @@
     text-wrap: nowrap;
 }
 
+.button-group--nav button, .button-group--nav a, .button-group--nav input {
+    width: 7rem;
+    text-align: center;
+}
+
 @media screen and (max-width: 780px) {
     .jump-modal {
         left: 50%;

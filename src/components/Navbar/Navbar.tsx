@@ -172,7 +172,7 @@ const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate }) => {
           </a>
         </div>
         <div className='button-group--nav'>
-          <button onClick={changeMode}>{`${isSafeMode? 'Safe' : 'Unsafe'}Mode`}</button>
+          <button onClick={changeMode}>{`Modo ${isSafeMode? 'Seguro' : 'Livre'}`}</button>
           <button onClick={logout}>Deslogar</button>
         </div>
       </div>

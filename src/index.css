@@ -78,6 +78,15 @@ button:focus-visible {
   word-break: break-all;
 }
 
+.no-margin-h{
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.no-margin-bottom{
+  margin-bottom: 0;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

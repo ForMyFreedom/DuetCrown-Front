@@ -64,14 +64,16 @@ export type Thing = {
   description: string
   relativeCapacity?: string
   gliph: Gliph | ''
-  equiped: boolean
+  applicated: boolean
+  modifications?: Modification[]
 }
 
 export type Minucie = {
   name: string
   relative?: string
   description: string
-  applicated?: boolean
+  applicated: boolean
+  modifications?: Modification[]
 }
 
 export type ImagePlayerData = {
@@ -81,6 +83,12 @@ export type ImagePlayerData = {
   scale: number
 }
 
+export type Modification = {
+  kind: 'capacity' | 'stat'
+  value: ExtendedSignal
+  origin: string // thing or minucie name
+  keywords: string[] // In case of capacity, is ['name']... In case of stat, is ['relativeCapacity', 'kind']
+}
 
 export type StringRelation = {[key: string]: string}
 
@@ -101,13 +109,8 @@ export type Player = {
   things: Thing[]
   minucies: Minucie[]
   anotations: string
+  currentMods: Modification[]
   /*
-  bonus: {
-    capacities: {
-      [CapGrop in keyof Omit<Partial<Capacities>, 'primal'>]: Partial<Capacities[CapGrop]>
-    }
-    stats: Stat[]
-  }
   vantage: {
     capacities: {
       [CapGrop in keyof Omit<Partial<Capacities>, 'primal'>]: {
@@ -202,6 +205,55 @@ export function getMeanOfGliphs(gliphArray: Gliph[]): Gliph {
   const meanIndex = Math.floor(indexArray.reduce((a, b) => a + b, 0) / indexArray.length)
   return GliphConst[meanIndex]
 }
+
+export function getSignalWithAmount(amount: number, symbol: '+'|'-'): ExtendedSignal {
+  const middleIndex = SignalsConst.indexOf('')
+  const offset = (symbol == '+') ? amount : - amount
+  const finalIndex = middleIndex + offset
+  if(finalIndex<0){
+    return SignalsConst[0]
+  }
+  if(finalIndex>=SignalsConst.length){
+    return SignalsConst[SignalsConst.length-1]
+  }
+  return SignalsConst[finalIndex]
+}
+
+export function sumSignal(signal1: ExtendedSignal, signal2: ExtendedSignal): ExtendedSignal {
+  return operateSignal(signal1, signal2, 1)
+}
+
+export function subSignal(signal1: ExtendedSignal, signal2: ExtendedSignal): ExtendedSignal {
+  return operateSignal(signal1, signal2, -1)
+}
+
+function operateSignal(signal1: ExtendedSignal, signal2: ExtendedSignal, operate: 1|-1): ExtendedSignal {
+  const meanIndex = SignalsConst.indexOf('')
+  const signal1Index = SignalsConst.indexOf(signal1) - meanIndex
+  const signal2Index = SignalsConst.indexOf(signal2) - meanIndex
+  const finalIndex = meanIndex + signal1Index + operate * signal2Index
+  if(finalIndex<0){
+    return SignalsConst[0]
+  }
+  if(finalIndex>=SignalsConst.length){
+    return SignalsConst[SignalsConst.length-1]
+  }
+  return SignalsConst[finalIndex]
+}
+
+export function inverseSignal(signal: ExtendedSignal): ExtendedSignal {
+  const meanIndex = SignalsConst.indexOf('')
+  const signalIndex = SignalsConst.indexOf(signal) - meanIndex
+  const finalIndex = meanIndex - signalIndex
+  if(finalIndex<0){
+    return SignalsConst[0]
+  }
+  if(finalIndex>=SignalsConst.length){
+    return SignalsConst[SignalsConst.length-1]
+  }
+  return SignalsConst[finalIndex]
+}
+
 
 /*
 export function setBonusInRelative(user: Player, bonus: ExtendedSignal|undefined, relative: string|undefined) {

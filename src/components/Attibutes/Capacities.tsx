@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import './Capacities.css'
-import { Capacities, Gliph, Player, Stat } from '../../UserDomain'
+import { Capacities, Gliph, Player, Stat, getGliphAfterMod, inverseSignal } from '../../UserDomain'
 import UnitAtribute from './components/UnitAtribute';
 import UnitChallenge from './components/UnitChallenge';
 import { TRANSLATE_BASIC_ATRIBUTE, TRANSLATE_KIND_ATRIBUTE, TRANSLATE_SPECIAL } from './Definitions';
@@ -8,7 +8,6 @@ import UnitPrimal, { PrimalKind } from './components/UnitPrimal';
 import AttributeHandler from './abstract/AttributeHandler';
 import { ResultTextOptions } from './components/definitions';
 import { isEqualObject } from '../../utils';
-
 
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
@@ -34,7 +33,35 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
 
   const rollCountDuo = useState(0)
 
-  const [peculiarCapacities, setPeculiarCapacities] = useState<Capacities['peculiars']>(user.capacities.peculiars)
+  function simplyFind<T>(obj: {[key:string]: T}, search: string): T|undefined {
+    const find = Object.entries(obj).find(([k]) => k == search)
+    if(find){
+      return find[1]
+    }else{
+      return undefined
+    }
+  }
+
+  const moddedCapacities = useMemo(() => {
+    const newCapacities: Capacities = JSON.parse(JSON.stringify(user.capacities))
+    for(const mod of user.currentMods){
+      const basicFind = simplyFind<Gliph>(newCapacities.basics, mod.keywords[0])
+      if(basicFind){
+        newCapacities.basics[mod.keywords[0] as keyof Capacities['basics']] = getGliphAfterMod(basicFind, mod.value)
+      }
+      const specialFind = simplyFind<Gliph>(newCapacities.specials, mod.keywords[0])
+      if(specialFind){
+        newCapacities.specials[mod.keywords[0] as keyof Capacities['specials']] = getGliphAfterMod(specialFind, mod.value)
+      }
+      const peculiarFind = simplyFind<Gliph>(newCapacities.peculiars, mod.keywords[0])
+      if(peculiarFind){
+        newCapacities.peculiars[mod.keywords[0]] = getGliphAfterMod(peculiarFind, mod.value)
+      }
+    }
+    return newCapacities
+  }, [user.capacities, user.currentMods])
+
+  const [peculiarCapacities, setPeculiarCapacities] = useState<Capacities['peculiars']>(moddedCapacities.peculiars)
 
   useEffect(()=>{
     setPeculiarCapacities(prevCap => {
@@ -97,6 +124,22 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
         if(thing.relativeCapacity == oldKey){
           thing.relativeCapacity = newKey as string
         }
+        if(thing.modifications){
+          for(const mod of thing.modifications){
+            if(mod.keywords[0] == oldKey){
+              mod.keywords = mod.keywords.splice(0, 1, newKey as string)
+            }
+          }
+        }
+      }
+      for(const minuce of prevUser.minucies) {
+        if(minuce.modifications){
+          for(const mod of minuce.modifications){
+            if(mod.keywords[0] == oldKey){
+              mod.keywords = mod.keywords.splice(0, 1, newKey as string)
+            }
+          }
+        }
       }
       for(const stat of prevUser.stats) {
         if(stat.relativeCapacity == oldKey) {
@@ -106,6 +149,11 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
       for(const mov of prevUser.moviments) {
         if(mov.relativeCapacity == oldKey) {
           mov.relativeCapacity = newKey as string
+        }
+      }
+      for(const mods of prevUser.currentMods) {
+        if(mods.keywords[0] == oldKey){
+          mods.keywords = mods.keywords.splice(0, 1, newKey as string)
         }
       }
       for(const stat of Object.keys(prevUser.toShowStats)) {
@@ -120,14 +168,25 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
 
   function MultiRender<T extends keyof Capacities>(key: T, TRANSLATER: (x: keyof Capacities[T]) => string, editable: boolean): JSX.Element[] {
     const setMultiValue = (name: string) => {
-      return (value: Gliph) => setCapacities({...user.capacities, [key]: {...user.capacities[key], [name]: value}})
+      return (value: Gliph) => {
+        const newCaps: Capacities = {...user.capacities}
+
+        for(const mod of user.currentMods) {
+          if(mod.kind=='capacity' && mod.keywords[0]==name) {
+            value = getGliphAfterMod(value, inverseSignal(mod.value))
+          }
+        }
+
+        newCaps[key] = {...newCaps[key], [name]: value}
+        setCapacities(newCaps)
+      }
     }
 
-    const values = user.capacities[key] as {[key: string]: Gliph}
+    const values = moddedCapacities[key] as {[key: string]: Gliph}
     if(Object.keys(values).length == 0) { return [] }
     return (Object.keys(values) as (keyof Capacities[T])[]).map(internalKey => {
       return <UnitAtribute key={`${key}-${internalKey as string}`} name={TRANSLATER(internalKey)}
-        challenge={challenge} value={user.capacities[key][internalKey] as Gliph} setAttributeValue={setMultiValue(internalKey as string)}
+        challenge={challenge} value={moddedCapacities[key][internalKey] as Gliph} setAttributeValue={setMultiValue(internalKey as string)}
         setCifraResult={setCifrasResult} setTextResult={setTextResult} setExtraResult={setExtraResult} rollCountDuo={rollCountDuo}
         editable={editable} setAttributeName={(newKey: string)=>{renameAttribute(internalKey as string, newKey)}}
       />

@@ -15,6 +15,7 @@
 
 .bad-gliph-effect {
     text-decoration: line-through;
+    color: grey;
 }
 
 .list ul {

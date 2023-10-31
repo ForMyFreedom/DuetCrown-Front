@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import '../MinucesAndThings.css'
-import { Player } from '../../../UserDomain'
+import { Modification, Player } from '../../../UserDomain'
 import EditableText from '../../EditableText/EditableText';
 import { isEqualArray } from '../../../utils';
+import ModPlayerHandler from '../../ModPlayerHandler/ModPlayerHandler';
 
 type Props = {
     user: Player;
@@ -75,6 +76,14 @@ const Minuces: React.FC<Props> = ({ user, setUser }) => {
     });
   }
 
+  const handleModificationChange: (index: number) => (v: Modification[]) => void = (index: number) => {
+    return (v:Modification[]) => setMinucies(prevMinuces => {
+      const newMinuces = [...prevMinuces];
+      newMinuces[index].modifications = v;
+      return newMinuces;
+    })
+  } 
+
   return (
     <div className="list">
       <h2 className="list-heading">Minúcias</h2>
@@ -99,9 +108,10 @@ const Minuces: React.FC<Props> = ({ user, setUser }) => {
               className='attribute-text'
             />
             <button onClick={()=>handleEquipedToggled(index)}>{minucie.applicated ? 'Aplicado' : 'Não Aplicado'}</button>
+            <ModPlayerHandler user={user} target={minucie} setTarget={handleModificationChange(index)} setUser={setUser}/>
           </ul>
         })}
-        <button onClick={addNewMinuce}>Add More</button>
+        <button onClick={addNewMinuce}>Adicionar Mais</button>
     </div>
     );
 };

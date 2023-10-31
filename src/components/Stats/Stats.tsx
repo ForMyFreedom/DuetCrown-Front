@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState, ReactElement, useEffect } from 'react';
 import '../Attibutes/Capacities.css'
 import './Stats.css'
-import { Capacities, ExtendedSignal, Gliph, Player, Stat, getGliphAfterMod, solveDMG, subtractGliphs } from '../../UserDomain'
+import { Capacities, ExtendedSignal, Gliph, Player, Stat, StatConst, getGliphAfterMod, solveDMG, subtractGliphs, sumSignal } from '../../UserDomain'
 import { ResultTextOptions } from '../Attibutes/components/definitions';
 import AttributeHandler from '../Attibutes/abstract/AttributeHandler';
 import UnitChallenge from '../Attibutes/components/UnitChallenge';
@@ -31,6 +31,32 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
       return 100
     }
   }, [stats])
+
+
+  const statWithMod = useMemo(()=>{
+    const allMods = user.currentMods
+    const newStats: Stat[] = JSON.parse(JSON.stringify(stats))
+    for(const mod of allMods) {
+      if (mod.kind == 'stat') {
+        const stat = newStats.find((s: Stat) => s.relativeCapacity==mod.keywords[0] && s.kind==mod.keywords[1])
+        if(stat){
+          stat.naturalMod = sumSignal(stat.naturalMod, mod.value)
+        } else {
+          newStats.push({relativeCapacity: mod.keywords[0], kind: mod.keywords[1] as Stat['kind'], naturalMod: mod.value})
+        }
+      } else {
+        for (const kind of StatConst) {
+          const internalStat = newStats.find((s: Stat) => s.relativeCapacity==mod.keywords[0] && s.kind==kind)
+          if (internalStat) {
+            internalStat.naturalMod = sumSignal(internalStat.naturalMod, mod.value)
+          } else {
+            newStats.push({kind: kind, relativeCapacity: mod.keywords[0], naturalMod: mod.value})
+          }
+        }
+      }
+    }
+    return newStats
+  }, [user.currentMods, stats])
 
   useEffect(() => {
     setUser(prevUser => {return {...prevUser, stats: stats}})
@@ -89,14 +115,14 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
     const basicsStats: Stat[] = getAllDmgVitStat(user, 'basics')
     const allStats: Stat[] = [...specialStats, ...basicsStats].filter(a => (a.kind == 'VIT' && (a.relativeCapacity == 'body' || a.relativeCapacity == 'mind')) || a.kind!='VIT')
     const filteredStats = filterStat(user, allStats)
-    for(const stat of stats) {
+    for(const stat of statWithMod) {
       const statInPlayer = filteredStats.find(s => s.kind==stat.kind && s.relativeCapacity==stat.relativeCapacity)
       if(statInPlayer){
         statInPlayer.naturalMod = stat.naturalMod
       }
     }
     return filteredStats
-  }, [stats, user])
+  }, [statWithMod, user])
 
   const getAtkDefStat = useMemo(() => {
     const peculiarsStats: Stat[] = getAllAtkDefStat(user, 'peculiars')
@@ -105,14 +131,14 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
     const allStats: Stat[] = [...peculiarsStats, ...specialStats, ...basicsStats]
     const filteredStats = filterStat(user, allStats)
 
-    for(const stat of stats) {
+    for(const stat of statWithMod) {
       const statInPlayer = filteredStats.find(s => s.kind==stat.kind && s.relativeCapacity==stat.relativeCapacity)
       if(statInPlayer){
         statInPlayer.naturalMod = stat.naturalMod
       }
     }
     return filteredStats
-  }, [stats, user])
+  }, [statWithMod, user])
 
   const cifraResultDuo = useState('👑👑')
   const extraResultDuo = useState('0')
@@ -126,10 +152,16 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
 
   const handleSetStat = (oldStat: Stat, gliph: Gliph) => {
     setStats(prevStats => {
-      const relativeCapacity = getGliphFromCapacityName(user, oldStat.relativeCapacity)
-      if(!relativeCapacity) { return prevStats }
-      const newSignal = subtractGliphs(gliph, relativeCapacity)
+      let relativeGliph = getGliphFromCapacityName(user, oldStat.relativeCapacity)
+      if(!relativeGliph) { return prevStats }
 
+      for(const mod of user.currentMods) {
+        if(mod.keywords[0]==oldStat.relativeCapacity) {
+          relativeGliph = getGliphAfterMod(relativeGliph, mod.value)
+        }
+      }
+
+      const newSignal = subtractGliphs(gliph, relativeGliph)
       const newStats = [...prevStats]
 
       for(const stat of newStats) {
@@ -187,8 +219,8 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
 
   function applyDamage(target: 'life' | 'sanity') {
     const baseStat = (target=='life'
-      ? stats.find(s => s.relativeCapacity=='body' && s.kind=='VIT')
-      : stats.find(s => s.relativeCapacity=='mind' && s.kind=='VIT')
+      ? statWithMod.find((s: Stat) => s.relativeCapacity=='body' && s.kind=='VIT')
+      : statWithMod.find((s: Stat) => s.relativeCapacity=='mind' && s.kind=='VIT')
     )
 
     const setFunction = (target=='life'

@@ -1,0 +1,40 @@
+.mod-value--input {
+    font-size: 2rem;
+}
+
+.mod-value--group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mod-keyword--group {
+    display: flex;
+    width: 100%;
+}
+
+.mod-keyword--group li {
+    width: 100%;
+}
+
+.grid-of-options{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.mod-keyword--group li:hover {
+    background-color: black;
+}
+
+.selected {
+    background-color: var(--primary-color) !important;
+}
+
+.mod-container p:hover {
+    -webkit-text-stroke: 0.05rem var(--primary-color);
+    cursor: pointer;
+}
+
+.button--mod {
+    font-size: 1rem;
+}
