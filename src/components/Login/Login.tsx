@@ -2,7 +2,7 @@ import  React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css'
 import LoginService from '../../services/LoginService';
-import { AUTH_CODE, PLAYER_CODE, PLAYER_ID_CODE } from '../Navbar/Navbar';
+import { AUTH_CODE, PLAYER_ID_CODE } from '../Navbar/Navbar';
 
 const Login = () => {
   const navigate = useNavigate()
@@ -22,7 +22,7 @@ const Login = () => {
         const data = response.data
         localStorage.setItem(AUTH_CODE, data.token)
         localStorage.setItem(PLAYER_ID_CODE, data.playerId)
-        localStorage.removeItem(PLAYER_CODE)
+        // localStorage.removeItem(PLAYER_CODE)
         navigate('/')
       })
       .catch(error => {
