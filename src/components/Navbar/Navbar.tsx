@@ -61,7 +61,8 @@ const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate }) => {
           autoClose: 2000,
         });
       })
-      .catch(() => {
+      .catch((e) => {
+        console.log(e)
         toast.error('Update failed!', {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 2000,
@@ -148,13 +149,14 @@ const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate }) => {
       <div className='jump-modal'>
         <button onClick={()=>jumpTo(0)}>Imagem</button>
         <button onClick={()=>jumpTo(1)}>Identidade/Sumário</button>
-        <button onClick={()=>jumpTo(2)}>Capacidades Mundanas</button>
-        <button onClick={()=>jumpTo(3)}>Capacidades Especiais</button>
-        <button onClick={()=>jumpTo(4)}>STATS</button>
-        <button onClick={()=>jumpTo(5)}>Movimentos</button>
-        <button onClick={()=>jumpTo(6)}>Evoluções/Extensões</button>
-        <button onClick={()=>jumpTo(7)}>Minúcias/Coisas</button>
-        <button onClick={()=>jumpTo(8)}>Anotações</button>
+        <button onClick={()=>jumpTo(2)}>Rolagem</button>
+        <button onClick={()=>jumpTo(3)}>Capacidades Mundanas</button>
+        <button onClick={()=>jumpTo(4)}>Capacidades Especiais</button>
+        <button onClick={()=>jumpTo(5)}>STATS</button>
+        <button onClick={()=>jumpTo(6)}>Movimentos</button>
+        <button onClick={()=>jumpTo(7)}>Evoluções/Extensões</button>
+        <button onClick={()=>jumpTo(8)}>Minúcias/Coisas</button>
+        <button onClick={()=>jumpTo(9)}>Anotações</button>
       </div>
       }
       <div ref={menuOption} className="navbar-options">

@@ -28,3 +28,11 @@
 .flex-30 {
     flex: 30%;
 }
+
+
+@media (max-width: 768px) {
+    .stat-modal-content {
+        width: 60%;
+        max-height: 100%;
+    }
+}

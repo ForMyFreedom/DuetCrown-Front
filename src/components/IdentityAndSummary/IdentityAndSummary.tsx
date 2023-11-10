@@ -104,6 +104,7 @@ const IdentityAndSummary: React.FC<Props> = ({ user, setUser }) => {
           text={value}
           dataSetter={(newValue: string) => group[key] = newValue}
           className='attribute-text text-wrap'
+          ignoreEnter={true}
         />
       </div>
     )

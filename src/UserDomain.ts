@@ -255,6 +255,48 @@ export function inverseSignal(signal: ExtendedSignal): ExtendedSignal {
 }
 
 
+
+export function calculateLevelOfPlayer(player: Player): Gliph {
+  const basicLevelMean = Object.entries(player.capacities.basics)
+    .map(([, gliph]) => GliphConst.indexOf(gliph))
+    .reduce((a, b) => a + b, 0)
+    / Object.keys(player.capacities.basics).length
+
+  const amountOfPeculiar = Object.keys(player.capacities.peculiars).length
+  let peculiarLevelMean: number
+  if(amountOfPeculiar>0){
+    peculiarLevelMean = Object.entries(player.capacities.peculiars)
+    .map(([, gliph]) => GliphConst.indexOf(gliph))
+    .reduce((a, b) => a + b, 0)
+    * ((2+amountOfPeculiar)/(4*amountOfPeculiar))
+  } else {
+    peculiarLevelMean = 0
+  }
+
+  const specialLevelMean = deggregation(
+    Object.entries(player.capacities.specials)
+      .map(([, gliph]) => aggregation(GliphConst.indexOf(gliph)))
+      .reduce((a, b) => a + b, 0)
+  )
+
+  const levelMean = Math.round((basicLevelMean + peculiarLevelMean + specialLevelMean)/3)
+  if (levelMean<0) { return GliphConst[0] }
+  if (levelMean>=GliphConst.length) { return GliphConst[GliphConst.length-1] }
+  return GliphConst[levelMean]
+}
+
+
+function aggregation(y: number): number {
+  if(y<=4) { return (y-1)/3 }
+  const c = 3/Math.log(2)
+  return Math.E**((y-4)/c)
+}
+
+function deggregation(x: number): number {
+  if(x<=1) { return 3*x+1}
+  return 3*Math.log2(x)+4
+}
+
 /*
 export function setBonusInRelative(user: Player, bonus: ExtendedSignal|undefined, relative: string|undefined) {
   if(!bonus || !relative) { return }

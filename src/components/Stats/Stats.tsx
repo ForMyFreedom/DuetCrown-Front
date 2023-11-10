@@ -295,7 +295,7 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
         />
         {isHideStatusModalOpen && (
         <div ref={modalRef} className="modal">
-          <div className="modal-content">
+          <div className="modal-content stat-modal-content">
             <button onClick={() => setIsHideStatusModalOpen(false)}>Fechar</button>
               <div className='group-of-stats'>
                 {getAllHidenStats.map((stat) => {

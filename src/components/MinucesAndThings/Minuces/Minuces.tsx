@@ -86,32 +86,35 @@ const Minuces: React.FC<Props> = ({ user, setUser }) => {
 
   return (
     <div className="list">
-      <h2 className="list-heading">Minúcias</h2>
-        {minucies.map((minucie, index)=>{
-          return <ul key={`${minucie.name}-${Math.random()}`}>
-            <EditableText
-              text={minucie.name}
-              dataSetter={(value: string) => {handleNameChange(index, value)}}
-              className='principal-minuce-text'
-            />
-            {minucie.relative &&
-            <EditableText
-              text={minucie.relative}
-              extraTextRender={(v)=>`[${v}]`}
-              dataSetter={(value: string) => {handleRelativeChange(index, value)}}
-              className='secondary-minuce-text'
-            />
-            }
-            <EditableText
-              text={minucie.description}
-              dataSetter={(value: string) => {handleDescriptionChange(index, value)}}
-              className='attribute-text'
-            />
-            <button onClick={()=>handleEquipedToggled(index)}>{minucie.applicated ? 'Aplicado' : 'Não Aplicado'}</button>
-            <ModPlayerHandler user={user} target={minucie} setTarget={handleModificationChange(index)} setUser={setUser}/>
-          </ul>
-        })}
-        <button onClick={addNewMinuce}>Adicionar Mais</button>
+      <div className='limited'>
+        <h2 className="list-heading">Minúcias</h2>
+          {minucies.map((minucie, index)=>{
+            return <ul key={`${minucie.name}-${Math.random()}`}>
+              <EditableText
+                text={minucie.name}
+                dataSetter={(value: string) => {handleNameChange(index, value)}}
+                className='principal-minuce-text'
+              />
+              {minucie.relative &&
+              <EditableText
+                text={minucie.relative}
+                extraTextRender={(v)=>`[${v}]`}
+                dataSetter={(value: string) => {handleRelativeChange(index, value)}}
+                className='secondary-minuce-text'
+              />
+              }
+              <EditableText
+                text={minucie.description}
+                dataSetter={(value: string) => {handleDescriptionChange(index, value)}}
+                className='attribute-text'
+                ignoreEnter={true}
+              />
+              <button onClick={()=>handleEquipedToggled(index)}>{minucie.applicated ? 'Aplicado' : 'Não Aplicado'}</button>
+              <ModPlayerHandler user={user} target={minucie} setTarget={handleModificationChange(index)} setUser={setUser}/>
+            </ul>
+          })}
+          <button onClick={addNewMinuce}>Adicionar Mais</button>
+      </div>
     </div>
     );
 };

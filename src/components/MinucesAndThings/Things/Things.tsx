@@ -109,40 +109,43 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
 
   return (
     <div className="list">
-      <h2 className="list-heading">Coisas</h2>
-        {things.map((thing, index)=>{
-          return <ul key={`${thing.name}-${Math.random()}`}>
-            <EditableText
-              text={thing.name}
-              dataSetter={(value: string) => {handleNameChange(index, value)}}
-              className='principal-minuce-text'
-            />
-            {thing.relativeCapacity &&
-            <EditableText
-              text={thing.relativeCapacity}
-              extraTextRender={(v)=>`[${v}]`}
-              dataSetter={(value: string) => {handleRelativeChange(index, value)}}
-              className='secondary-minuce-text'
-            />
-            }
-            <EditableText
-              text={thing.description}
-              dataSetter={(value: string) => {handleDescriptionChange(index, value)}}
-              className='attribute-text-2'
-            />
-            {thing.gliph &&
+      <div className='limited'>
+        <h2 className="list-heading">Coisas</h2>
+          {things.map((thing, index)=>{
+            return <ul key={`${thing.name}-${Math.random()}`}>
               <EditableText
-                text={thing.gliph}
-                dataSetter={(value: string) => {handleGlyphChange(index, value)}}
-                className={`list-atr-p ${getIsOkGliph(thing) ? '' : 'bad-gliph-effect'}`}
+                text={thing.name}
+                dataSetter={(value: string) => {handleNameChange(index, value)}}
+                className='principal-minuce-text'
               />
-            }
-            <p className='italic'>{isGliphInRegularity(thing.gliph, getGliphFromCapacityName(user, thing.relativeCapacity))}</p>
-            <button onClick={()=>handleEquipedToggled(index)}>{thing.applicated ? 'Equipado' : 'Desequipado'}</button>
-            <ModPlayerHandler user={user} target={thing} setTarget={handleModificationChange(index)} setUser={setUser} />
-          </ul>
+              {thing.relativeCapacity &&
+              <EditableText
+                text={thing.relativeCapacity}
+                extraTextRender={(v)=>`[${v}]`}
+                dataSetter={(value: string) => {handleRelativeChange(index, value)}}
+                className='secondary-minuce-text'
+              />
+              }
+              <EditableText
+                text={thing.description}
+                dataSetter={(value: string) => {handleDescriptionChange(index, value)}}
+                className='attribute-text'
+                ignoreEnter={true}
+              />
+              {thing.gliph &&
+                <EditableText
+                  text={thing.gliph}
+                  dataSetter={(value: string) => {handleGlyphChange(index, value)}}
+                  className={`list-atr-p ${getIsOkGliph(thing) ? '' : 'bad-gliph-effect'}`}
+                />
+              }
+              <p className='italic'>{isGliphInRegularity(thing.gliph, getGliphFromCapacityName(user, thing.relativeCapacity))}</p>
+              <button onClick={()=>handleEquipedToggled(index)}>{thing.applicated ? 'Equipado' : 'Desequipado'}</button>
+              <ModPlayerHandler user={user} target={thing} setTarget={handleModificationChange(index)} setUser={setUser} />
+            </ul>
         })}
         <button onClick={addNewThing}>Adicionar Mais</button>
+      </div>
     </div>
     );
 };

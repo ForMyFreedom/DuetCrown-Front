@@ -12,8 +12,8 @@ type Props = {
 const MinucesAndThings: React.FC<Props> = ({ user, setUser }) => {
   return (
       <div className="half-box">
-        <Minuces user={user} setUser={setUser}/>
-        <Things user={user} setUser={setUser}/>
+          <Minuces user={user} setUser={setUser}/>
+          <Things user={user} setUser={setUser}/>
       </div>
     );
 };
