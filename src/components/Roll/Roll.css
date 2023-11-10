@@ -1,0 +1,39 @@
+.roll-grid {
+  display: grid !important;
+  grid-template-columns: auto;
+  justify-items: center;
+}
+
+.roll-modal {
+  width: 10rem;
+}
+
+.roll-input {
+  max-width: 2rem;
+  height: 2rem;
+  margin-right: 0.5rem;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.roll-dice {
+  display: block !important;
+  margin-bottom: 2rem;
+}
+
+.roll-dice h3 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+@media (min-width: 450px) {
+  .roll-grid {
+    grid-template-columns: auto auto;
+  }
+}
+
+@media (min-width: 900px) {
+  .roll-grid {
+    grid-template-columns: auto auto auto;
+  }
+}
