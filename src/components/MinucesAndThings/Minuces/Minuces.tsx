@@ -4,6 +4,7 @@ import { Modification, Player } from '../../../UserDomain'
 import EditableText from '../../EditableText/EditableText';
 import { isEqualArray } from '../../../utils';
 import ModPlayerHandler from '../../ModPlayerHandler/ModPlayerHandler';
+import ImageOfItem, { Item } from '../../ImageOfItem/ImageOfItem';
 
 type Props = {
     user: Player;
@@ -28,7 +29,7 @@ const Minuces: React.FC<Props> = ({ user, setUser }) => {
 
   const addNewMinuce = () => {
     setMinucies(prevMinucies => {
-      const newMinucies = [...prevMinucies, {name: 'Traço', relative: 'Relativo?', description: 'Descrição', applicated: true}];
+      const newMinucies = [...prevMinucies, {name: 'Traço', relative: 'Relativo?', description: 'Descrição', applicated: true, imageUrl: ''}];
       return newMinucies;
     });
   }
@@ -82,7 +83,7 @@ const Minuces: React.FC<Props> = ({ user, setUser }) => {
       newMinuces[index].modifications = v;
       return newMinuces;
     })
-  } 
+  }
 
   return (
     <div className="list">
@@ -108,6 +109,12 @@ const Minuces: React.FC<Props> = ({ user, setUser }) => {
                 dataSetter={(value: string) => {handleDescriptionChange(index, value)}}
                 className='attribute-text'
                 ignoreEnter={true}
+              />
+              <ImageOfItem
+                setItems={setMinucies as React.Dispatch<React.SetStateAction<Item[]>>}
+                items={minucies}
+                itemIndex={index}
+                style={{marginBottom: '1rem'}}
               />
               <button onClick={()=>handleEquipedToggled(index)}>{minucie.applicated ? 'Aplicado' : 'Não Aplicado'}</button>
               <ModPlayerHandler user={user} target={minucie} setTarget={handleModificationChange(index)} setUser={setUser}/>
