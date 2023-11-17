@@ -5,6 +5,7 @@ import EditableText from '../../EditableText/EditableText';
 import { getGliphFromCapacityName } from './definitions';
 import { isEqualArray } from '../../../utils';
 import ModPlayerHandler from '../../ModPlayerHandler/ModPlayerHandler';
+import ImageOfItem, { Item } from '../../ImageOfItem/ImageOfItem';
 
 type Props = {
     user: Player;
@@ -33,6 +34,7 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
         name: 'Item', description: 'Descrição',
         relativeCapacity: 'Relativo?', gliph: 'FF',
         applicated: true,
+        imageUrl: '',
       }];
       return newThings;
     });
@@ -132,14 +134,19 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
                 className='attribute-text'
                 ignoreEnter={true}
               />
+              <ImageOfItem
+                setItems={setThings as React.Dispatch<React.SetStateAction<Item[]>>}
+                items={things}
+                itemIndex={index}
+              />
               {thing.gliph &&
                 <EditableText
                   text={thing.gliph}
                   dataSetter={(value: string) => {handleGlyphChange(index, value)}}
-                  className={`list-atr-p ${getIsOkGliph(thing) ? '' : 'bad-gliph-effect'}`}
+                  className={`anti-margin list-atr-p ${getIsOkGliph(thing) ? '' : 'bad-gliph-effect'}`}
                 />
               }
-              <p className='italic'>{isGliphInRegularity(thing.gliph, getGliphFromCapacityName(user, thing.relativeCapacity))}</p>
+              <p className='anti-margin italic'>{isGliphInRegularity(thing.gliph, getGliphFromCapacityName(user, thing.relativeCapacity))}</p>
               <button onClick={()=>handleEquipedToggled(index)}>{thing.applicated ? 'Equipado' : 'Desequipado'}</button>
               <ModPlayerHandler user={user} target={thing} setTarget={handleModificationChange(index)} setUser={setUser} />
             </ul>

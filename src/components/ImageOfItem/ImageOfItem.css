@@ -1,0 +1,12 @@
+
+.image-holder img {
+    margin-top: 1rem;
+    cursor: pointer;
+    object-fit:scale-down;
+    max-height: 13rem;
+}
+
+.image-holder i {
+    cursor: pointer;
+    padding: 1rem 2rem 0 2rem !important;
+}
