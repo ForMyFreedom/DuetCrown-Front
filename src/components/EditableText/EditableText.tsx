@@ -59,7 +59,7 @@ const EditableText: React.FC<EditableTextProps> = ({ text, filter, dataSetter, e
         <div className="editable-text" style={fullWidth?{width: '100%'}:{}}>
             {isEditing ? (
                 <span
-                    contentEditable
+                    contentEditable='plaintext-only'
                     className={`editable-text-area ${props.className}`}
                     ref={textareaRef}
                     onClick={(event) => event.stopPropagation()}
