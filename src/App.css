@@ -127,6 +127,10 @@
   overflow-y: auto;
 }
 
+.centralized-text{
+  text-align: center;
+}
+
 .modal-content button {
   background-color: rgba(0, 0, 0, 0.8);
 }
@@ -156,6 +160,18 @@
 .modal-content form input {
   min-width: 20rem;
   text-align: center;
+}
+
+.good-button-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+.good-button-container button{
+  padding: 0.5rem 2rem 0.5rem 2rem;
+  border: 0.1rem solid var(--primary-color);
 }
 
 @media (max-width: 768px) {

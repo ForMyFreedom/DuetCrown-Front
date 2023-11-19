@@ -17,8 +17,6 @@ import GetRecentCharacterService from './services/GetRecentCharacterService';
 import { ToastContainer } from 'react-toastify';
 import Roll from './components/Roll/Roll';
 
-
-
 function App() {
   const [user, setUser] = useState<Player>(BLANK_PLAYER)
   // eslint-disable-next-line react-hooks/rules-of-hooks

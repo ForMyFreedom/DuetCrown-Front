@@ -5,6 +5,7 @@ import GetRecentCharacterService from '../../services/GetRecentCharacterService'
 import { NavigateFunction } from 'react-router-dom';
 import UpdateCharacterService from '../../services/UpdateCharacterService';
 import { toast } from 'react-toastify';
+import ConfirmationModal from './components/ConfirmationModal';
 
 type Props = {
   userRef: React.MutableRefObject<Player>
@@ -22,6 +23,7 @@ const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate }) => {
   const [isJumpModalOpen, setIsJumpModalOpen] = useState(false)
   const fileInputRef: RefObject<HTMLInputElement> = useRef(null);
   const menuOption = useRef<HTMLDivElement>(null);
+  const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
 
   const [isSafeMode, setIsSafeMode] = useState<boolean>(
     localStorage.getItem(SAFE_MODE_CODE) ? Boolean(Number(localStorage.getItem(SAFE_MODE_CODE))) : false
@@ -55,19 +57,6 @@ const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate }) => {
     const auth = localStorage.getItem(AUTH_CODE)
     if(!id||!auth) { return }
     UpdateCharacterService.update(id, auth, userRef.current)
-      .then(() => {
-        toast.success('Update successful!', {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 2000,
-        });
-      })
-      .catch((e) => {
-        console.log(e)
-        toast.error('Update failed!', {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 2000,
-        });
-      })
   }
 
   const changeMode = () => {
@@ -79,9 +68,11 @@ const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate }) => {
     const auth = localStorage.getItem(AUTH_CODE)
     if(!id||!auth) { return }
     GetRecentCharacterService.get(id,auth).then((result) => {
-      userRef.current = result.data
-      localStorage.setItem(PLAYER_CODE, JSON.stringify(userRef.current))
-      window.location.reload()
+      if(result && result.data){
+        userRef.current = result.data
+        localStorage.setItem(PLAYER_CODE, JSON.stringify(userRef.current))
+        window.location.reload()
+      }
     })
   }
 
@@ -175,9 +166,18 @@ const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate }) => {
         </div>
         <div className='button-group--nav'>
           <button onClick={changeMode}>{`Modo ${isSafeMode? 'Seguro' : 'Livre'}`}</button>
-          <button onClick={logout}>Deslogar</button>
+          <button onClick={() => setConfirmationModalOpen(true)}>Deslogar</button>
         </div>
       </div>
+      {isConfirmationModalOpen && (
+        <ConfirmationModal
+          onCancel={() => setConfirmationModalOpen(false)}
+          onConfirm={() => {
+            logout();
+            setConfirmationModalOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 };
