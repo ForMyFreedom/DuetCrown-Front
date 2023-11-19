@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Player, StringRelation } from '../../UserDomain'
 import './IdentityAndSummary.css'
 import EditableText from '../EditableText/EditableText';
-import { isEqualObject } from '../../utils';
+import { changeOrderInStringRelation, isEqualObject } from '../../utils';
 
 type Dispatch<T> = React.Dispatch<React.SetStateAction<T>>
 
@@ -99,6 +99,7 @@ const IdentityAndSummary: React.FC<Props> = ({ user, setUser }) => {
           text={key}
           dataSetter={(newKey: string) => handleChangeKey(setGroup, key, newKey)}
           className='attribute-text bold'
+          callBackWhenUpDownArrowPressed={(isUp) => changeOrderInStringRelation(isUp, index, group, setGroup)}
         />
         <EditableText
           text={value}

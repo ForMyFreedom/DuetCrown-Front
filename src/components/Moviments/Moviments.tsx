@@ -11,7 +11,7 @@ import AttributeHandler from '../Attibutes/abstract/AttributeHandler';
 import { ResultTextOptions } from '../Attibutes/components/definitions';
 import UnitChallenge from '../Attibutes/components/UnitChallenge';
 import UnitButtonRoll from '../Attibutes/components/UnitButtonRoll';
-import { isEqualArray } from '../../utils';
+import { changeOrderInArray, isEqualArray } from '../../utils';
 
 interface Props {
   user: Player;
@@ -233,8 +233,8 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
               </button>
               {visibleMovements[capName] && (
               <ul className="movement-list">
-                {moviments.map(mov=>{
-                  return <li key={mov.name}>
+                {moviments.map((mov, index)=>{
+                  return <li key={index}>
                     <div className='name-container--mov'>
                       <UnitButtonRoll
                         value={getMovimentGlyph(mov)}
@@ -246,10 +246,11 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
                         className='roll-mov-button--mov'
                       />
                       <EditableText
-                            text={`${mov.name}`}
+                            text={mov.name}
                             extraTextRender={(v: string) => `${v} ${mov.agregated} [${getMovimentGlyph(mov)}]`}
                             dataSetter={(v:string)=>handleChangeName(v, mov)}
                             className="movement-name"
+                            callBackWhenUpDownArrowPressed={(isUp) => changeOrderInArray(isUp, index, setMoviments)}
                       />
                       <div className='aggregated-gliph-buttons--mov'>
                         <button onClick={()=>descreaseMod(mov)}>-</button>

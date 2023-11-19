@@ -3,7 +3,7 @@ import './EvolutionsAndExtensions.css'
 import { Extension, Gliph, Player, Signal } from '../../UserDomain'
 import UnitNumber from '../Attibutes/components/UnitNumber';
 import UnitNumberAndGlyph from '../Attibutes/components/UnitNumberAndGlyph';
-import { isEqualArray } from '../../utils';
+import { changeOrderInArray, isEqualArray } from '../../utils';
 
 type Props = {
     user: Player;
@@ -105,21 +105,24 @@ const EvolutionsAndExtensions: React.FC<Props> = ({ user, setUser }) => {
           </div>
         </div>
         <div className="list">
-          <h2 className="list-heading">Extensões</h2>
-          {extensions.map((extension, index) => {
-              return <div key={`${extension.name} [${extension.kind}]`}>
-                <UnitNumberAndGlyph
-                  text={{main: extension.name, second: extension.kind}}
-                  setText={{main: (v: string) => handleExtensionNameChange(index, v), second: (v: string) => handleExtensionKindChange(index, v)}}
-                  progress={extension.progress} value={extension.value}
-                  setProgress={(value: number) => handleExtensionProgressChange(index, value)}
-                  setValue={(value: string) => handleExtensionValueChange(index, value)}
-                />
+          <div className='limited'>
+            <h2 className="list-heading">Extensões</h2>
+            {extensions.map((extension, index) => {
+                return <div key={index}>
+                  <UnitNumberAndGlyph
+                    text={{main: extension.name, second: extension.kind}}
+                    setText={{main: (v: string) => handleExtensionNameChange(index, v), second: (v: string) => handleExtensionKindChange(index, v)}}
+                    progress={extension.progress} value={extension.value}
+                    setProgress={(value: number) => handleExtensionProgressChange(index, value)}
+                    setValue={(value: string) => handleExtensionValueChange(index, value)}
+                    callBackWhenUpDownArrowPressed={(isUp) => changeOrderInArray(isUp, index, setExtensions)}
+                  />
+              </div>
+            })}
+            <div className='button-group-extension'>
+              <button onClick={() => addNewBasicExtension()}>Add More Basic</button>
+              <button onClick={() => addNewGlyphExtension()}>Add More Glyph</button>
             </div>
-          })}
-          <div className='button-group-extension'>
-            <button onClick={() => addNewBasicExtension()}>Add More Basic</button>
-            <button onClick={() => addNewGlyphExtension()}>Add More Glyph</button>
           </div>
      </div>
       </div>
