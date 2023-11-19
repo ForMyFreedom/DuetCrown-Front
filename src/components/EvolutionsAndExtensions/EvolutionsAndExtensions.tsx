@@ -115,6 +115,7 @@ const EvolutionsAndExtensions: React.FC<Props> = ({ user, setUser }) => {
                     progress={extension.progress} value={extension.value}
                     setProgress={(value: number) => handleExtensionProgressChange(index, value)}
                     setValue={(value: string) => handleExtensionValueChange(index, value)}
+                    callBackWhenUpDownArrowPressed={(isUp) => changeOrderInArray(isUp, index, setExtensions)}
                   />
               </div>
             })}

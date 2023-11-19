@@ -11,7 +11,7 @@ import AttributeHandler from '../Attibutes/abstract/AttributeHandler';
 import { ResultTextOptions } from '../Attibutes/components/definitions';
 import UnitChallenge from '../Attibutes/components/UnitChallenge';
 import UnitButtonRoll from '../Attibutes/components/UnitButtonRoll';
-import { isEqualArray } from '../../utils';
+import { changeOrderInArray, isEqualArray } from '../../utils';
 
 interface Props {
   user: Player;
@@ -250,6 +250,7 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
                             extraTextRender={(v: string) => `${v} ${mov.agregated} [${getMovimentGlyph(mov)}]`}
                             dataSetter={(v:string)=>handleChangeName(v, mov)}
                             className="movement-name"
+                            callBackWhenUpDownArrowPressed={(isUp) => changeOrderInArray(isUp, index, setMoviments)}
                       />
                       <div className='aggregated-gliph-buttons--mov'>
                         <button onClick={()=>descreaseMod(mov)}>-</button>

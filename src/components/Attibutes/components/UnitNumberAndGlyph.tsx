@@ -10,9 +10,10 @@ type Props = {
     setProgress: (v: number) => void
     value: string
     setValue: (v: string) => void
+    callBackWhenUpDownArrowPressed?: (isUp: boolean) => void;
 };
 
-const UnitNumberAndGlyph: React.FC<Props> = ({ text, setText, progress, value, setProgress, setValue}) => {
+const UnitNumberAndGlyph: React.FC<Props> = ({ callBackWhenUpDownArrowPressed, text, setText, progress, value, setProgress, setValue}) => {
     const decrease = () => {
         const result = progress-1
         setProgress(result)
@@ -71,6 +72,7 @@ const UnitNumberAndGlyph: React.FC<Props> = ({ text, setText, progress, value, s
                         text={text.main}
                         className='grid-item-b'
                         dataSetter={(v: string) => {setText.main(v)}}
+                        callBackWhenUpDownArrowPressed={callBackWhenUpDownArrowPressed}
                     />
                     <EditableText
                         text={text.second}

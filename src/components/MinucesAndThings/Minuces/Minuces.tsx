@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../MinucesAndThings.css'
 import { Modification, Player } from '../../../UserDomain'
 import EditableText from '../../EditableText/EditableText';
-import { isEqualArray } from '../../../utils';
+import { changeOrderInArray, isEqualArray } from '../../../utils';
 import ModPlayerHandler from '../../ModPlayerHandler/ModPlayerHandler';
 import ImageOfItem, { Item } from '../../ImageOfItem/ImageOfItem';
 
@@ -95,6 +95,7 @@ const Minuces: React.FC<Props> = ({ user, setUser }) => {
                 text={minucie.name}
                 dataSetter={(value: string) => {handleNameChange(index, value)}}
                 className='principal-minuce-text'
+                callBackWhenUpDownArrowPressed={(isUp) => changeOrderInArray(isUp, index, setMinucies)}
               />
               {minucie.relative &&
               <EditableText
@@ -125,5 +126,6 @@ const Minuces: React.FC<Props> = ({ user, setUser }) => {
     </div>
     );
 };
+
 
 export default Minuces;

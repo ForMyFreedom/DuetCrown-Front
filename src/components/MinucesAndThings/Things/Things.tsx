@@ -3,7 +3,7 @@ import '../MinucesAndThings.css'
 import { Gliph, GliphConst, Modification, Player, Thing, isGliphInConformity, isGliphInRegularity } from '../../../UserDomain'
 import EditableText from '../../EditableText/EditableText';
 import { getGliphFromCapacityName } from './definitions';
-import { isEqualArray } from '../../../utils';
+import { changeOrderInArray, isEqualArray } from '../../../utils';
 import ModPlayerHandler from '../../ModPlayerHandler/ModPlayerHandler';
 import ImageOfItem, { Item } from '../../ImageOfItem/ImageOfItem';
 
@@ -119,6 +119,7 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
                 text={thing.name}
                 dataSetter={(value: string) => {handleNameChange(index, value)}}
                 className='principal-minuce-text'
+                callBackWhenUpDownArrowPressed={(isUp) => changeOrderInArray(isUp, index, setThings)}
               />
               {thing.relativeCapacity &&
               <EditableText

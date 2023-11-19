@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import './EditableText.css';
 
@@ -7,12 +8,14 @@ type EditableTextProps = React.HTMLAttributes<HTMLDivElement> & {
     extraTextRender?: (value: string) => string;
     filter?: (value: string) => string;
     ignoreEnter?: boolean;
-    fullWidth?: boolean
+    fullWidth?: boolean,
+    callBackWhenUpDownArrowPressed?: (isUp: boolean) => void;
 };
 
-const EditableText: React.FC<EditableTextProps> = ({ text, filter, dataSetter, extraTextRender, ignoreEnter, fullWidth, ...props }) => {
+const EditableText: React.FC<EditableTextProps> = ({ text, filter, dataSetter, extraTextRender, ignoreEnter, fullWidth, callBackWhenUpDownArrowPressed, ...props }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedText, setEditedText] = useState(text);
+    const [cancelEditing, setCancelEditing] = useState(false);
     const textareaRef = useRef<HTMLSpanElement>(null);
     const spanRef = useRef<HTMLSpanElement>(null);
     
@@ -28,6 +31,10 @@ const EditableText: React.FC<EditableTextProps> = ({ text, filter, dataSetter, e
     }, [editedText, extraTextRender])
 
     const handleTextBlur = () => {
+        if(cancelEditing){
+            setCancelEditing(false)
+            return
+        }
         setIsEditing(false);
         const finalText = filter
             ? filter(textareaRef.current?.innerText || '')
@@ -37,10 +44,28 @@ const EditableText: React.FC<EditableTextProps> = ({ text, filter, dataSetter, e
         setEditedText(finalText)
     };
 
+    useEffect(()=>{
+        if(cancelEditing){
+            textareaRef.current?.blur()
+        }
+    }, [cancelEditing])
+
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
+            event.stopPropagation();
+            event.stopImmediatePropagation();
             if ((!ignoreEnter && event.key === 'Enter') || event.key === 'Escape') {
                 textareaRef.current?.blur()
+            }
+            if(callBackWhenUpDownArrowPressed){
+                if(event.key === 'ArrowUp'){
+                    callBackWhenUpDownArrowPressed(true)
+                    setCancelEditing(true)
+                }
+                if(event.key === 'ArrowDown'){
+                    callBackWhenUpDownArrowPressed(false)
+                    setCancelEditing(true)
+                }
             }
         };
     
@@ -53,7 +78,7 @@ const EditableText: React.FC<EditableTextProps> = ({ text, filter, dataSetter, e
                 textareaRef.current.removeEventListener('keydown', handleKeyDown);
             }
         }
-    }, [ignoreEnter, isEditing])
+    }, [callBackWhenUpDownArrowPressed, ignoreEnter, isEditing])
 
     return (
         <div className="editable-text" style={fullWidth?{width: '100%'}:{}}>
