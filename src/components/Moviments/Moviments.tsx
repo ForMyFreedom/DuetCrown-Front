@@ -233,8 +233,8 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
               </button>
               {visibleMovements[capName] && (
               <ul className="movement-list">
-                {moviments.map(mov=>{
-                  return <li key={mov.name}>
+                {moviments.map((mov, index)=>{
+                  return <li key={index}>
                     <div className='name-container--mov'>
                       <UnitButtonRoll
                         value={getMovimentGlyph(mov)}
@@ -246,7 +246,7 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
                         className='roll-mov-button--mov'
                       />
                       <EditableText
-                            text={`${mov.name}`}
+                            text={mov.name}
                             extraTextRender={(v: string) => `${v} ${mov.agregated} [${getMovimentGlyph(mov)}]`}
                             dataSetter={(v:string)=>handleChangeName(v, mov)}
                             className="movement-name"

@@ -201,9 +201,9 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
     })
   }
 
-  function getStatUnitAtribute(stat: Stat, isRollable: boolean): ReactElement {
+  function getStatUnitAtribute(index: number, stat: Stat, isRollable: boolean): ReactElement {
     const name = generalTranslator(stat.relativeCapacity)
-    return <div className='stat-flex-box'>
+    return <div key={index} className='stat-flex-box'>
       <UnitAtribute
         key={`${name}-${stat.kind}`}
         name={`${name} [${stat.kind}]`}
@@ -278,10 +278,10 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
               />
             </div>
             <div className='multi-render-bigger'>
-              {getAtkDefStat.map(stat => getStatUnitAtribute(stat, true))}
+              {getAtkDefStat.map((stat, index) => getStatUnitAtribute(index, stat, true))}
             </div>
             <div className='multi-render-bigger'>
-              {getDmgVitStat.map(stat => getStatUnitAtribute(stat, false))}
+              {getDmgVitStat.map((stat, index) => getStatUnitAtribute(index, stat, false))}
             </div>
           </>
           }
