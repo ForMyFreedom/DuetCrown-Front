@@ -45,17 +45,19 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
   const moddedCapacities = useMemo(() => {
     const newCapacities: Capacities = JSON.parse(JSON.stringify(user.capacities))
     for(const mod of user.currentMods){
-      const basicFind = simplyFind<Gliph>(newCapacities.basics, mod.keywords[0])
-      if(basicFind){
-        newCapacities.basics[mod.keywords[0] as keyof Capacities['basics']] = getGliphAfterMod(basicFind, mod.value)
-      }
-      const specialFind = simplyFind<Gliph>(newCapacities.specials, mod.keywords[0])
-      if(specialFind){
-        newCapacities.specials[mod.keywords[0] as keyof Capacities['specials']] = getGliphAfterMod(specialFind, mod.value)
-      }
-      const peculiarFind = simplyFind<Gliph>(newCapacities.peculiars, mod.keywords[0])
-      if(peculiarFind){
-        newCapacities.peculiars[mod.keywords[0]] = getGliphAfterMod(peculiarFind, mod.value)
+      if(mod.kind == 'capacity') {
+        const basicFind = simplyFind<Gliph>(newCapacities.basics, mod.keywords[0])
+        if(basicFind){
+          newCapacities.basics[mod.keywords[0] as keyof Capacities['basics']] = getGliphAfterMod(basicFind, mod.value)
+        }
+        const specialFind = simplyFind<Gliph>(newCapacities.specials, mod.keywords[0])
+        if(specialFind){
+          newCapacities.specials[mod.keywords[0] as keyof Capacities['specials']] = getGliphAfterMod(specialFind, mod.value)
+        }
+        const peculiarFind = simplyFind<Gliph>(newCapacities.peculiars, mod.keywords[0])
+        if(peculiarFind){
+          newCapacities.peculiars[mod.keywords[0]] = getGliphAfterMod(peculiarFind, mod.value)
+        } 
       }
     }
     return newCapacities
@@ -184,8 +186,8 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
 
     const values = moddedCapacities[key] as {[key: string]: Gliph}
     if(Object.keys(values).length == 0) { return [] }
-    return (Object.keys(values) as (keyof Capacities[T])[]).map(internalKey => {
-      return <UnitAtribute key={`${key}-${internalKey as string}`} name={TRANSLATER(internalKey)}
+    return (Object.keys(values) as (keyof Capacities[T])[]).map((internalKey, index) => {
+      return <UnitAtribute key={index} name={TRANSLATER(internalKey)}
         challenge={challenge} value={moddedCapacities[key][internalKey] as Gliph} setAttributeValue={setMultiValue(internalKey as string)}
         setCifraResult={setCifrasResult} setTextResult={setTextResult} setExtraResult={setExtraResult} rollCountDuo={rollCountDuo}
         editable={editable} setAttributeName={(newKey: string)=>{renameAttribute(internalKey as string, newKey)}}
@@ -193,8 +195,8 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
     })
   }
 
-  function PrimalRender(): JSX.Element {
-    return <UnitPrimal key={'primal'}
+  function PrimalRender(index: number): JSX.Element {
+    return <UnitPrimal key={index}
       data={user.capacities.primal}
       setAttributeValue={(v: number) => setCapacities({...user.capacities, primal: {...user.capacities.primal, value: v}})}
       setKind={(v: PrimalKind) => setCapacities({...user.capacities, primal: {...user.capacities.primal, kind: v}})}
@@ -202,11 +204,11 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
   }
 
   
-  const AttributeUnitRender: {[T in keyof Capacities]: JSX.Element|JSX.Element[]} = {
-    basics: <div className='multi-render'>{MultiRender<'basics'>('basics', (x=>TRANSLATE_BASIC_ATRIBUTE[x]), false)}</div>,
-    specials: <div className='multi-render'>{MultiRender<'specials'>('specials', (x=>TRANSLATE_SPECIAL[x]), false)}</div>,
-    peculiars: <div className='multi-render'>{MultiRender<'peculiars'>('peculiars', (x => String(x)), true)}</div>,
-    primal: PrimalRender(),
+  const AttributeUnitRender: {[T in keyof Capacities]: (index: number) => JSX.Element|JSX.Element[]} = {
+    basics: (index: number) => <div key={index} className='multi-render'>{MultiRender<'basics'>('basics', (x=>TRANSLATE_BASIC_ATRIBUTE[x]), false)}</div>,
+    specials: (index: number) => <div key={index} className='multi-render'>{MultiRender<'specials'>('specials', (x=>TRANSLATE_SPECIAL[x]), false)}</div>,
+    peculiars: (index: number) => <div key={index} className='multi-render'>{MultiRender<'peculiars'>('peculiars', (x => String(x)), true)}</div>,
+    primal:(index: number) => PrimalRender(index),
   }
 
   return (
@@ -219,8 +221,8 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
         <div className='challenge'>
           <UnitChallenge key='challenge2' value={challenge} setValue={setChallenge}/>
         </div>
-        {Object.keys(atributes).map(attributeKey => {
-          return AttributeUnitRender[attributeKey as keyof Capacities]
+        {Object.keys(atributes).map((attributeKey, index) => {
+          return AttributeUnitRender[attributeKey as keyof Capacities](index)
         })}
       </>
       }
