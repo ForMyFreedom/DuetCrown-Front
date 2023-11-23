@@ -7,7 +7,7 @@ export type PrimalKind = Capacities['primal']['kind']
 
 type Props = {
     data: Player['capacities']['primal']
-    setAttributeValue: (v: number) => void
+    setAttributeValue: (v: Player['capacities']['primal']['value']) => void
     setKind: (v: PrimalKind) => void
 };
 
@@ -25,6 +25,7 @@ const UnitPrimal: React.FC<Props> = ({ data, setAttributeValue, setKind }) => {
     }
 
     const decrease = () => {
+        if(!data.value) { return }
         const newValue = (data.kind=='Hope') ? data.value-1 : data.value+1 
         setAttributeValue(newValue)
         verifyInversion(newValue)
@@ -32,6 +33,11 @@ const UnitPrimal: React.FC<Props> = ({ data, setAttributeValue, setKind }) => {
 
     const dataSetter = (v: string) => {
         const value = Number(v)
+        const IS_ALL_DOTS = /\./
+        if (IS_ALL_DOTS.test(v)) {
+            setAttributeValue(null)
+            return
+        }
         if (Number.isNaN(value)) {
             setAttributeValue(10)
         } else {
@@ -41,6 +47,7 @@ const UnitPrimal: React.FC<Props> = ({ data, setAttributeValue, setKind }) => {
     }
     
     const increase = () => {
+        if(!data.value) { return }
         const newValue = (data.kind=='Hope') ? data.value+1 : data.value-1 
         setAttributeValue(newValue)
         verifyInversion(newValue)
@@ -48,21 +55,30 @@ const UnitPrimal: React.FC<Props> = ({ data, setAttributeValue, setKind }) => {
 
     return (
         <div className='challenge'>
-            <div className={`grid-item ${data.value >= 100 ? (data.kind == 'Hope' ? 'special-hope' : 'special-despair') : ''}`}>
-                <b>{TRANSLATE_PRIMAL[data.kind]}: </b>
-                <ApplyNumberInUnit
-                    data={data.value}
-                    setData={setAttributeValue}
-                    decrease={decrease}
-                    increase={increase}
-                    editableText={
-                        <EditableText
-                            className='list-atr-p margin-auto' text={String(data.value)}
-                            extraTextRender={(v: string) => v+'%'}
-                            dataSetter={dataSetter}
+            <div className={`grid-item ${data.value && data.value >= 100 ? (data.kind == 'Hope' ? 'special-hope' : 'special-despair') : ''}`}>
+                {data.value ? (
+                    <>
+                        <b>{TRANSLATE_PRIMAL[data.kind]}: </b>
+                        <ApplyNumberInUnit
+                            data={data.value}
+                            setData={setAttributeValue}
+                            decrease={decrease}
+                            increase={increase}
+                            editableText={
+                                <EditableText
+                                    className='list-atr-p margin-auto' text={String(data.value)}
+                                    extraTextRender={(v: string) => v+'%'}
+                                    dataSetter={dataSetter}
+                                />
+                            }
                         />
-                    }
-                />
+                    </>
+                ) : (
+                    <EditableText
+                        className='list-atr-p margin-auto' text={'...'}
+                        dataSetter={dataSetter}
+                    />
+                )}
             </div>
         </div>
     )

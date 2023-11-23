@@ -214,7 +214,7 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
   function PrimalRender(index: number): JSX.Element {
     return <UnitPrimal key={index}
       data={user.capacities.primal}
-      setAttributeValue={(v: number) => setCapacities({...user.capacities, primal: {...user.capacities.primal, value: v}})}
+      setAttributeValue={(v: number|null) => setCapacities({...user.capacities, primal: {...user.capacities.primal, value: v}})}
       setKind={(v: PrimalKind) => setCapacities({...user.capacities, primal: {...user.capacities.primal, kind: v}})}
     />
   }
