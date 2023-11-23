@@ -22,8 +22,8 @@ const UnitButtonRoll: React.FC<Props> = ({ value, challenge, setCifraResult, set
     }
 
     return (
-        <button className='unit-button-roll'>
-            <p onClick={roll} className={`grid-item-p-hover ${className}`}>Rolar</p>
+        <button onClick={roll} className='unit-button-roll'>
+            <p className={`grid-item-p-hover ${className}`}>Rolar</p>
         </button>
     )
 }
