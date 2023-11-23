@@ -308,7 +308,7 @@
 .list div, .attribute-text {
   margin: auto;
   font-size: 1.2rem;
-  max-width: 90%;
+  max-width: 95%;
 }
 
 @media screen and (max-width: 960px) {

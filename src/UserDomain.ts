@@ -91,6 +91,31 @@ export type ImagePlayerData = {
   scale: number
 }
 
+
+/* // @ Consider using this
+type BaseModification = {
+  value: ExtendedSignal
+  origin: string
+}
+
+type CapacityModification = BaseModification & {
+  kind: 'capacity'
+  keywords: {
+    name: string
+  }
+}
+
+type StatModification = BaseModification & {
+  kind: 'stat'
+  keywords: {
+    relativeCapacity: string
+    kind: string
+  }
+}
+
+export type Modification = CapacityModification | StatModification
+*/
+
 export type Modification = {
   kind: 'capacity' | 'stat'
   value: ExtendedSignal
