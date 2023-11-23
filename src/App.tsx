@@ -16,6 +16,7 @@ import Navbar, { AUTH_CODE, PLAYER_CODE, PLAYER_ID_CODE } from './components/Nav
 import GetRecentCharacterService from './services/GetRecentCharacterService';
 import { ToastContainer } from 'react-toastify';
 import Roll from './components/Roll/Roll';
+import { LevelMeaning } from './components/Attibutes/components/definitions';
 
 function App() {
   const [user, setUser] = useState<Player>(BLANK_PLAYER)
@@ -26,6 +27,10 @@ function App() {
   const mundainAtributes: Partial<Capacities> = useMemo(() => {
     return {basics: user.capacities.basics}
   }, [user?.capacities])
+
+  const playerLevel = useMemo(() => {
+    return calculateLevelOfPlayer(user)
+  }, [user])
 
   const specialAtributes: Partial<Capacities> = useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -118,7 +123,8 @@ function App() {
           dataSetter={(value: string) => setUser({ ...user, nickname: value })}
           className="players-nick-name small-hover"
         />
-        <p className='player-level'>{calculateLevelOfPlayer(user)}</p>
+        <p className='player-level'>{playerLevel}</p>
+        <h3 className='level-description no-margin-top'>{LevelMeaning[playerLevel]}</h3>
 
         <span ref={jumpRefs[1]}>
           <IdentityAndSummary user={user} setUser={setUser} />

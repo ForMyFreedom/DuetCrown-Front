@@ -47,7 +47,11 @@
   justify-content: center;
   font-size: 3rem;
   margin-top: 0;
-  margin-bottom: 2rem;
+  margin-bottom: 0 !important;
+}
+
+.no-margin-top {
+  margin-top: 0 !important;
 }
 
 .players-nick-name {
