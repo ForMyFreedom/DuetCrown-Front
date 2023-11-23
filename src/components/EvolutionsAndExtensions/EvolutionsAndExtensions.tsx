@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './EvolutionsAndExtensions.css'
-import { Extension, Gliph, Player, Signal } from '../../UserDomain'
+import { Extension, Gliph, GliphConst, Player, Signal, SignalsConst } from '../../UserDomain'
 import UnitNumber from '../Attibutes/components/UnitNumber';
 import UnitNumberAndGlyph from '../Attibutes/components/UnitNumberAndGlyph';
 import { changeOrderInArray, isEqualArray } from '../../utils';
@@ -116,6 +116,13 @@ const EvolutionsAndExtensions: React.FC<Props> = ({ user, setUser }) => {
                     setProgress={(value: number) => handleExtensionProgressChange(index, value)}
                     setValue={(value: string) => handleExtensionValueChange(index, value)}
                     callBackWhenUpDownArrowPressed={(isUp) => changeOrderInArray(isUp, index, setExtensions)}
+                    dataFilter={(v: string) => {
+                      if(GliphConst.includes(extension.value as Gliph)){
+                        return GliphConst.includes(v as Gliph) ? v : GliphConst[0]
+                      } else {
+                        return SignalsConst.includes(v as Signal) ? v : ''
+                      }
+                    }}
                   />
               </div>
             })}
