@@ -200,6 +200,23 @@ const BLANK_PLAYER: Player = {
       "value": 0
     }
   },
+  "progress": {
+    "basics": {
+      "strength": 0,
+      "agility": 0,
+      "body": 0,
+      "mind": 0,
+      "senses": 0,
+      "charisma": 0,
+    },
+    "peculiars": {},
+    "specials": {
+      "ambition": 0,
+      "judge": 0,
+      "wish": 0,
+      "will": 0
+    },
+  },
   "stats": [],
   "toShowStats": {},
   "moviments": [],

@@ -31,6 +31,12 @@ export type Capacities = {
   }
 }
 
+export type ProgessInCapacities = {
+  [T in keyof Omit<Capacities,'primal'>]: Record<keyof Capacities[T], number>
+};
+
+export type CommumMoviment = Pick<Moviment, 'name'|'description'>
+
 export type Stat = {
   kind: 'VIT' | 'DMG' | 'DEF' | 'ATK'
   naturalMod: ExtendedSignal
@@ -92,6 +98,8 @@ export type Modification = {
   keywords: string[] // In case of capacity, is ['name']... In case of stat, is ['relativeCapacity', 'kind']
 }
 
+
+
 export type StringRelation = {[key: string]: string}
 
 export type Player = {
@@ -103,6 +111,7 @@ export type Player = {
   identity: StringRelation
   sumary: StringRelation
   capacities: Capacities
+  progress: ProgessInCapacities
   stats: Stat[]
   toShowStats: {[kind in Stat['kind']]?: string[] } // string[] -> capacityName[]
   evolutions: Evolutions
@@ -168,9 +177,9 @@ export function subtractGliphs(firstGliph: Gliph, secondGliph: Gliph): ExtendedS
 }
 
 
-export function solveDMG(vitGliph: Gliph, dmgGliph: Gliph): number {
+export function solveDMG(vitGliph: Gliph, modGliph: Gliph): number {
   const vitIndex = GliphConst.indexOf(vitGliph)
-  const dmgIndex = GliphConst.indexOf(dmgGliph)
+  const dmgIndex = GliphConst.indexOf(modGliph)
   const dif = dmgIndex-vitIndex
   let percen = 25
 

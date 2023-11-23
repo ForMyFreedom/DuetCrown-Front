@@ -8,6 +8,7 @@ import UnitPrimal, { PrimalKind } from './components/UnitPrimal';
 import AttributeHandler from './abstract/AttributeHandler';
 import { ResultTextOptions } from './components/definitions';
 import { isEqualObject } from '../../utils';
+import EditableText from '../EditableText/EditableText';
 
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
@@ -191,6 +192,21 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
         challenge={challenge} value={moddedCapacities[key][internalKey] as Gliph} setAttributeValue={setMultiValue(internalKey as string)}
         setCifraResult={setCifrasResult} setTextResult={setTextResult} setExtraResult={setExtraResult} rollCountDuo={rollCountDuo}
         editable={editable} setAttributeName={(newKey: string)=>{renameAttribute(internalKey as string, newKey)}}
+        bottomComponent={
+          <div className='flex-row'>
+            <p className='progress'>Evolução:</p>
+            <EditableText
+                text={user.progress[key][internalKey] ?? 0}
+                className='progress'
+                dataSetter={(_v: string) => {setUser(prevUser => {
+                  const newProgress = {...prevUser.progress}
+                  newProgress[key][internalKey] = Number(_v)
+                  return {...prevUser, progress: newProgress}
+                })}}
+                extraTextRender={(v: string)=>v+'%'}
+            />
+          </div>
+        }
       />
     })
   }
