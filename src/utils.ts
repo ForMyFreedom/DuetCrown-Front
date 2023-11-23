@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { Moviment, StringRelation } from "./UserDomain";
+import { Moviment, Player, StringRelation } from "./UserDomain";
 import { toast } from 'react-toastify';
 
 export function isEqualArray<T>(array1: T[], array2: T[]):boolean {
@@ -21,6 +21,17 @@ export function changeOrderInArray<T>(isUp: boolean, index: number, setItens: Re
       newItens[index] = aux;
       return newItens;
     });
+}
+
+
+export function someMinuceOrThingHasThisName(player: Player, name: string) {
+  for(const item of player.things){
+    if(item.name == name){ return true; }
+  }
+  for(const item of player.minucies){
+    if(item.name == name) { return true; }
+  }
+  return false;
 }
 
 export function changeOrderInStringRelation(isUp: boolean, index: number, itens: StringRelation, setItens: React.Dispatch<React.SetStateAction<StringRelation>>) {
