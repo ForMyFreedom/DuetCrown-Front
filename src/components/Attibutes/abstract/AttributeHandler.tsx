@@ -47,6 +47,8 @@ const AttributeHandler: React.FC<Props> = ({ title, user, setUser, addNewAttribu
     const newPrimal = Object.assign({}, oldPrimal)
     const randomRoll = Math.floor(Math.random() * 10) + 1
 
+    if(!newPrimal.value) { return }
+
     if(oldPrimal.kind == primal) {
       newPrimal.value += randomRoll
     } else {

@@ -42,6 +42,11 @@
   margin-bottom: 1rem;
 }
 
+.progress {
+  font-size: 1.5rem !important;
+}
+
+
 .list-atr div {
   display: flex;
   align-items: center;

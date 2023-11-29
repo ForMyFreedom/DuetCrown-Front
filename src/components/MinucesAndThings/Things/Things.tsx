@@ -3,7 +3,7 @@ import '../MinucesAndThings.css'
 import { Gliph, GliphConst, Modification, Player, Thing, isGliphInConformity, isGliphInRegularity } from '../../../UserDomain'
 import EditableText from '../../EditableText/EditableText';
 import { getGliphFromCapacityName } from './definitions';
-import { changeOrderInArray, isEqualArray } from '../../../utils';
+import { changeOrderInArray, isEqualArray, someMinuceOrThingHasThisName } from '../../../utils';
 import ModPlayerHandler from '../../ModPlayerHandler/ModPlayerHandler';
 import ImageOfItem, { Item } from '../../ImageOfItem/ImageOfItem';
 
@@ -51,11 +51,20 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
   }, [setThings, things])
 
   const handleNameChange = (index: number, value: string) => {
+    const oldValue = things[index].name;
+    while(someMinuceOrThingHasThisName(user, value)) {
+      value += '*'
+    }
     setThings(prevThings => {
       const newThings = [...prevThings];
       newThings[index].name = value;
       return newThings;
     });
+    for (const mod of user.currentMods) {
+      if(mod.origin === oldValue){
+        mod.origin = value
+      }
+    }
   };
 
   const handleGlyphChange = (index: number, value: string) => {

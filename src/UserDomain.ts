@@ -27,9 +27,15 @@ export type Capacities = {
   peculiars: { [name: string]: Gliph }
   primal: {
     kind: 'Hope' | 'Despair'
-    value: number // percentage
+    value: number|null // percentage
   }
 }
+
+export type ProgessInCapacities = {
+  [T in keyof Omit<Capacities,'primal'>]: Record<keyof Capacities[T], number>
+};
+
+export type CommumMoviment = Pick<Moviment, 'name'|'description'>
 
 export type Stat = {
   kind: 'VIT' | 'DMG' | 'DEF' | 'ATK'
@@ -51,7 +57,7 @@ export type Extension = {
 }
 
 export type Moviment = {
-  kind: 'Peculiar' | 'Combined'
+  kind: 'Peculiar' | 'Combined' | 'Commum'
   relativeCapacity: string
   agregated: ExtendedSignal
   name: string
@@ -85,12 +91,39 @@ export type ImagePlayerData = {
   scale: number
 }
 
+
+/* // @ Consider using this
+type BaseModification = {
+  value: ExtendedSignal
+  origin: string
+}
+
+type CapacityModification = BaseModification & {
+  kind: 'capacity'
+  keywords: {
+    name: string
+  }
+}
+
+type StatModification = BaseModification & {
+  kind: 'stat'
+  keywords: {
+    relativeCapacity: string
+    kind: string
+  }
+}
+
+export type Modification = CapacityModification | StatModification
+*/
+
 export type Modification = {
   kind: 'capacity' | 'stat'
   value: ExtendedSignal
   origin: string // thing or minucie name
   keywords: string[] // In case of capacity, is ['name']... In case of stat, is ['relativeCapacity', 'kind']
 }
+
+
 
 export type StringRelation = {[key: string]: string}
 
@@ -103,6 +136,7 @@ export type Player = {
   identity: StringRelation
   sumary: StringRelation
   capacities: Capacities
+  progress: ProgessInCapacities
   stats: Stat[]
   toShowStats: {[kind in Stat['kind']]?: string[] } // string[] -> capacityName[]
   evolutions: Evolutions
@@ -168,9 +202,9 @@ export function subtractGliphs(firstGliph: Gliph, secondGliph: Gliph): ExtendedS
 }
 
 
-export function solveDMG(vitGliph: Gliph, dmgGliph: Gliph): number {
+export function solveDMG(vitGliph: Gliph, modGliph: Gliph): number {
   const vitIndex = GliphConst.indexOf(vitGliph)
-  const dmgIndex = GliphConst.indexOf(dmgGliph)
+  const dmgIndex = GliphConst.indexOf(modGliph)
   const dif = dmgIndex-vitIndex
   let percen = 25
 

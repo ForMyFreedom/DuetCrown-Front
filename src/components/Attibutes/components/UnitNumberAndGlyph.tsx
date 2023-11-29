@@ -9,11 +9,12 @@ type Props = {
     progress: number
     setProgress: (v: number) => void
     value: string
+    dataFilter: (v: string) => string
     setValue: (v: string) => void
     callBackWhenUpDownArrowPressed?: (isUp: boolean) => void;
 };
 
-const UnitNumberAndGlyph: React.FC<Props> = ({ callBackWhenUpDownArrowPressed, text, setText, progress, value, setProgress, setValue}) => {
+const UnitNumberAndGlyph: React.FC<Props> = ({ dataFilter, callBackWhenUpDownArrowPressed, text, setText, progress, value, setProgress, setValue}) => {
     const decrease = () => {
         const result = progress-1
         setProgress(result)
@@ -94,7 +95,11 @@ const UnitNumberAndGlyph: React.FC<Props> = ({ callBackWhenUpDownArrowPressed, t
                             filter={(v: string) => v.replace(/\D/g, '')}
                             dataSetter={(v: string) => setProgress(Number(v))}
                         />
-                        <h2 className='big-text'>{value}</h2>
+                        <EditableText
+                            className='big-text' text={value}
+                            filter={dataFilter}
+                            dataSetter={(v: string) => setValue(v)}
+                        />
                         </>
                     }
                 />

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../MinucesAndThings.css'
 import { Modification, Player } from '../../../UserDomain'
 import EditableText from '../../EditableText/EditableText';
-import { changeOrderInArray, isEqualArray } from '../../../utils';
+import { changeOrderInArray, isEqualArray, someMinuceOrThingHasThisName } from '../../../utils';
 import ModPlayerHandler from '../../ModPlayerHandler/ModPlayerHandler';
 import ImageOfItem, { Item } from '../../ImageOfItem/ImageOfItem';
 
@@ -46,11 +46,20 @@ const Minuces: React.FC<Props> = ({ user, setUser }) => {
 
 
   const handleNameChange = (index: number, value: string) => {
+    const oldValue = minucies[index].name;
+    while(someMinuceOrThingHasThisName(user, value)) {
+      value += '*'
+    }
     setMinucies(prevMinuces => {
       const newMinuces = [...prevMinuces];
       newMinuces[index].name = value;
       return newMinuces;
     });
+    for (const mod of user.currentMods) {
+      if(mod.origin === oldValue){
+        mod.origin = value
+      }
+    }
   };
 
   const handleRelativeChange = (index: number, value: string) => {

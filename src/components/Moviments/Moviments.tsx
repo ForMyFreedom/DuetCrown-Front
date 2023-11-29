@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
-import { Player, Moviment, getGliphAfterMod, modifySignal, Gliph, getMeanOfGliphs } from '../../UserDomain';
+import { Player, Moviment, getGliphAfterMod, modifySignal, Gliph, getMeanOfGliphs, CommumMoviment } from '../../UserDomain';
 import './Moviments.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
@@ -11,7 +11,9 @@ import AttributeHandler from '../Attibutes/abstract/AttributeHandler';
 import { ResultTextOptions } from '../Attibutes/components/definitions';
 import UnitChallenge from '../Attibutes/components/UnitChallenge';
 import UnitButtonRoll from '../Attibutes/components/UnitButtonRoll';
-import { changeOrderOfMoviments, isEqualArray } from '../../utils';
+import { allCapacitiesNames, changeOrderOfMoviments, isEqualArray } from '../../utils';
+import GetMovimentService from '../../services/GetMovimentService';
+import Collapsible from '../utils/Collapsible';
 
 interface Props {
   user: Player;
@@ -21,6 +23,7 @@ interface Props {
 const Moviments: React.FC<Props> = ({ user, setUser }) => {
   const [moviments, setMoviments] = useState(user.moviments)
   const [visibleMovements, setVisibleMovements] = useState<{ [key: string]: boolean }>({});
+  const [capactiePerCommumMoviment, setCapactiePerCommumMoviment] = useState<string[]>([]);
 
   const [challenge, setChallenge] = useState<Gliph>('FF')
   const rollCountDuo = useState(0)
@@ -33,6 +36,19 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
   const [,setExtraResult] = extraResultDuo
   const [,setTextResult]  = textResultDuo
 
+  const [commumMoviments, setCommumMoviments] = useState<CommumMoviment[]>()
+
+  useEffect(()=>{
+    const getMoviments = async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let bruteData: any[] = (await GetMovimentService.get()).data
+      bruteData = bruteData.sort((a,b)=>a.id - b.id)
+      setCommumMoviments(bruteData.map(m=>({...m, kind: 'Commum'})))
+      setCapactiePerCommumMoviment(Array(bruteData.length).fill(''))
+    }
+    getMoviments()
+  }, [])
+
   useEffect(()=>{
     setMoviments(prevMov => {
       return isEqualArray(prevMov, user.moviments) ? prevMov : user.moviments
@@ -40,8 +56,7 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
   }, [user.moviments])
 
   const movimentsPerCapacities: {[key: string]: Moviment[]} = useMemo(()=>{
-    const list: {[key: string]: Moviment[]} = { combined: []
-    };
+    const list: {[key: string]: Moviment[]} = { commum: commumMoviments as Moviment[] ?? [], combined: [] };
     
     for(const capName of Object.keys(user.capacities.peculiars)){
       list[capName] = [];
@@ -56,7 +71,7 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
     }
 
     return list;
-  }, [user.capacities, user.moviments])
+  }, [user.capacities, user.moviments, commumMoviments])
 
 
   useEffect(()=>{
@@ -225,7 +240,7 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
               <button className="list-mov-button capacity-collapsible" onClick={() => toggleMovementVisibility(capName)}>
                 <p>
                   {`${generalTranslator(capName)}
-                    ${capName!='combined'
+                    ${capName!='combined' && capName!='commum'
                       ? `[${getGliphFromCapacityName(user, capName)}]`
                       : ''
                     }`
@@ -238,7 +253,9 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
               {visibleMovements[capName] && (
               <ul className="movement-list">
                 {moviments.map((mov, index)=>{
-                  return <li key={index}>
+                  return (
+                  <li key={index}>
+                  {mov.kind!='Commum' ? (
                     <div className='name-container--mov'>
                       <UnitButtonRoll
                         value={getMovimentGlyph(mov)}
@@ -260,7 +277,6 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
                         <button onClick={()=>descreaseMod(mov)}>-</button>
                         <button onClick={()=>increaseMod(mov)}>+</button>
                       </div>
-                    </div>
                     {mov.kind=='Combined' &&
                       <div className='combinated-capacities--mov'>
                         {mov.relativeCapacity.split('|').map((capName, index)=>
@@ -274,18 +290,51 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
                         <button onClick={()=>addMoreCombinatedCapacities(mov)}>More</button>
                       </div>
                     }
-                    <div className='editable-text-container--mov'>
-                      <EditableText
-                          text={mov.description}
-                          dataSetter={(v:string)=>handleChangeDescription(v, mov)}
-                          className="movement-description"
-                          ignoreEnter={true}
-                          fullWidth={true}
+                  </div>
+                  ) : (
+                    <div className='name-container--mov'>
+                      <UnitButtonRoll
+                        value={getGliphFromCapacityName(user, capactiePerCommumMoviment[index]) || 'FF-'}
+                        challenge={challenge}
+                        setCifraResult={setCifraResult}
+                        setTextResult={setTextResult}
+                        setExtraResult={setExtraResult}
+                        rollCountDuo={rollCountDuo}
+                        className='roll-mov-button--mov'
                       />
-                    </div>
-                  </li>
-                })}
-                <button onClick={()=>addNewMoviment(capName)} className='new-moviment-btn'>Novo Movimento</button>
+                      <EditableText
+                        text={mov.name}
+                        dataSetter={(_)=>{}}
+                        className="movement-name"
+                        callBackWhenUpDownArrowPressed={(isUp) => changeOrderOfMoviments(isUp, trueIndex(mov.name), setMoviments)}
+                        disabled={true}
+                      />
+                      <span className='margin-left'>
+                        <Collapsible
+                          options={allCapacitiesNames(user)}
+                          setSelectedOption={(v)=>setCapactiePerCommumMoviment(prev=>{
+                            const newCapactiePerCommumMoviment = [...prev]
+                            newCapactiePerCommumMoviment[index] = v
+                            return newCapactiePerCommumMoviment
+                          })}
+                        />
+                      </span>
+                  </div>
+                  )
+                }
+                  <div className='editable-text-container--mov'>
+                    <EditableText
+                        text={mov.description}
+                        dataSetter={(v:string)=>handleChangeDescription(v, mov)}
+                        className="movement-description"
+                        ignoreEnter={true}
+                        fullWidth={true}
+                        disabled={mov.kind=='Commum'}
+                    />
+                  </div>
+                </li>
+                )})}
+                {capName!='commum' && <button onClick={()=>addNewMoviment(capName)} className='new-moviment-btn'>Novo Movimento</button> }
               </ul>
               )}
             </div>

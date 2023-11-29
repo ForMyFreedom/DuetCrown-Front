@@ -121,7 +121,7 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
         statInPlayer.naturalMod = stat.naturalMod
       }
     }
-    return filteredStats
+    return filteredStats.sort((a, b) => a.kind.localeCompare(b.kind))
   }, [statWithMod, user])
 
   const getAtkDefStat = useMemo(() => {
@@ -217,7 +217,7 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
     </div>
   }
 
-  function applyDamage(target: 'life' | 'sanity') {
+  function modifyActual(target: 'life' | 'sanity', modType: 'dmg' | 'health') {
     const baseStat = (target=='life'
       ? statWithMod.find((s: Stat) => s.relativeCapacity=='body' && s.kind=='VIT')
       : statWithMod.find((s: Stat) => s.relativeCapacity=='mind' && s.kind=='VIT')
@@ -231,13 +231,28 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
     if (baseStat && baseStat.actual) {
       const baseGliph = getGliphFromCapacityName(user, baseStat.relativeCapacity)
       if(baseGliph){
-        const dmg = solveDMG(
+        const mod = solveDMG(
           getGliphAfterMod(baseGliph, baseStat.naturalMod),
           challenge
         )
-        setFunction(Math.max(0, baseStat.actual - dmg))
+        let treatMod = Math.min(Math.max(0, mod), 100)
+        treatMod = modType=='dmg' ? -treatMod : treatMod
+        setFunction(baseStat.actual + treatMod)
       }
     }
+  }
+
+  const getModifyActualButtonGroup = (target: 'life' | 'sanity') => {
+    return (
+      <div className='flex-row'>
+        <button onClick={()=>modifyActual(target, 'dmg')}>
+          Aplicar Dano
+        </button>
+        <button onClick={()=>modifyActual(target, 'health')}>
+          Aplicar Cura
+        </button>
+      </div>
+    )
   }
 
   return (
@@ -250,7 +265,7 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
             <div className='challenge'>
               <UnitChallenge
                 key='challenge2' value={challenge} setValue={setChallenge}
-                customTitle='Desafio/Dano:'
+                customTitle='Desafio/Dano/Cura:'
               />
             </div>
             <div className='multi-render-bigger'>
@@ -260,9 +275,7 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
                 setData={(v: number) => setLifePercentage(v)}
                 className='flex-30'
                 bottomComponent={
-                  <button onClick={()=>applyDamage('life')}>
-                    Aplicar Dano
-                  </button>
+                  getModifyActualButtonGroup('life')
                 }
               />
               <UnitNumber
@@ -271,9 +284,7 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
                 setData={(v: number) => setSanityPercentage(v)}
                 className='flex-30'
                 bottomComponent={
-                  <button onClick={()=>applyDamage('sanity')}>
-                    Aplicar Dano
-                  </button>
+                  getModifyActualButtonGroup('sanity')
                 }
               />
             </div>

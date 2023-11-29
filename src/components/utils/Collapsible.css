@@ -1,0 +1,21 @@
+.collapsible {
+    position: absolute;
+    left: 0;
+    top: -1rem;
+    width: 10rem;
+}
+
+.collapsible button {
+    font-size: 0.75rem;
+}
+
+.selected {
+    border-color: #646cff;
+}
+
+.collapsible-father{
+    display: flex !important;
+    flex-wrap: wrap;
+    position: relative;
+    align-items: baseline !important;
+}
