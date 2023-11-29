@@ -30,13 +30,22 @@ export const TRANSLATE_SPECIAL: {[T in keyof Capacities['specials']]: string} = 
     will: 'Vontade',
 }
 
+const StaticNaming = {
+    combined: 'Combinados/Primal',
+    commum: 'Comum',
+}
+
 export function generalTranslator(capacity: string): string {
-  if(capacity=='combined') { return 'Combinados'}
+  if(Object.keys(StaticNaming).includes(capacity)) {
+    return StaticNaming[capacity as keyof typeof StaticNaming]
+  }
   return TRANSLATE_SOME_CAPACITY['basics'](capacity) ?? TRANSLATE_SOME_CAPACITY['specials'](capacity) ?? TRANSLATE_SOME_CAPACITY['peculiars'](capacity)
 }
 
 export function generalInverseTranslator(capacity: string): string {
-    if(capacity=='Combinados') { return 'combined'}
+    if(Object.values(StaticNaming).includes(capacity)) {
+        return Object.entries(StaticNaming).find(([, value]) => value==capacity)![0]
+    }
     const byBasics = Object.entries(TRANSLATE_BASIC_ATRIBUTE).find(([, value]) => value==capacity)
     if(byBasics) { return byBasics[0] }
     const bySpecials = Object.entries(TRANSLATE_SPECIAL).find(([, value]) => value==capacity)
