@@ -10,9 +10,10 @@ type EditableTextProps = React.HTMLAttributes<HTMLDivElement> & {
     ignoreEnter?: boolean;
     fullWidth?: boolean,
     callBackWhenUpDownArrowPressed?: (isUp: boolean) => void;
+    disabled?: boolean
 };
 
-const EditableText: React.FC<EditableTextProps> = ({ text, filter, dataSetter, extraTextRender, ignoreEnter, fullWidth, callBackWhenUpDownArrowPressed, ...props }) => {
+const EditableText: React.FC<EditableTextProps> = ({ disabled, text, filter, dataSetter, extraTextRender, ignoreEnter, fullWidth, callBackWhenUpDownArrowPressed, ...props }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedText, setEditedText] = useState(text);
     const [cancelEditing, setCancelEditing] = useState(false);
@@ -94,7 +95,7 @@ const EditableText: React.FC<EditableTextProps> = ({ text, filter, dataSetter, e
                     {editedText}
                 </span>
             ) : (
-                <span ref={spanRef} onClick={() => setIsEditing(true)} className={props.className}>{finalText}</span>
+                <span ref={spanRef} onClick={() => !disabled ? setIsEditing(true) : null} className={props.className}>{finalText}</span>
             )}
         </div>
     );

@@ -57,7 +57,7 @@ export type Extension = {
 }
 
 export type Moviment = {
-  kind: 'Peculiar' | 'Combined'
+  kind: 'Peculiar' | 'Combined' | 'Commum'
   relativeCapacity: string
   agregated: ExtendedSignal
   name: string

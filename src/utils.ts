@@ -87,6 +87,16 @@ export async function responseHandler(request: ()=>Promise<AxiosResponse>, suces
 }
 
 
+export function allCapacitiesNames(user: Player): string[] {
+  const capacitiesNames: string[] = []
+  for(const [capName, capacity] of Object.entries(user.capacities)){
+    if(capName!='primal') [
+      capacitiesNames.push(...Object.keys(capacity))
+    ]
+  }
+  return capacitiesNames
+}
+
 function getDirectional(isUp: boolean, index: number, length: number): number {
   let directional: number = 0
 
