@@ -7,6 +7,7 @@ export type Gliph = `${Letter}${Signal}`
 
 export const GliphConst: Gliph[] = ['FF-', 'FF', 'FF+', 'F-', 'F', 'F+', 'E-', 'E', 'E+', 'D-', 'D', 'D+', 'C-', 'C', 'C+', 'B-', 'B', 'B+', 'A-', 'A', 'A+', 'S-', 'S', 'S+', 'SS-', 'SS', 'SS+']
 export const SignalsConst: ExtendedSignal[] = ['-🌎🌎', '-🌎---', '-🌎--', '-🌎-', '-🌎', '---', '--', '-', '', '+', '++', '+++', '+🌎', '+🌎+', '+🌎++', '+🌎+++', '+🌎🌎']
+export const MeanSignalIndex = SignalsConst.indexOf('')
 export const StatConst: Stat['kind'][] = ['VIT', 'DMG', 'DEF', 'ATK']
 
 export type Capacities = {

@@ -119,9 +119,9 @@ const PlayerImage: React.FC<Props> = ({ user, setUser }) => {
             <form onSubmit={handleFormSubmit}>
               <label htmlFor="imageUrl">Image URL:</label>
               <input type="text" id="imageUrl" value={imageUrl} onChange={handleImageUrlChange} />
-              <div className="button-container">
-                <button type="submit">Save</button>
+              <div className="good-button-container">
                 <button onClick={handleFormCancel}>Close</button>
+                <button type="submit">Save</button>
               </div>
               <input onChange={handleXDesloc} value={xDesloc} type="range" min="-50" max="50" className="slider"/>
               <input onChange={handleYDesloc} value={yDesloc} type="range" min="-50" max="50" className="slider"/>
