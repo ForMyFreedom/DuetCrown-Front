@@ -30,6 +30,7 @@ const ModPlayerHandler: React.FC<Props> = ({ user, setUser, target, setTarget })
 
   useEffect(() => {
     const updateFinalMods = (finalMods: Modification[], prevUser: Player) => {
+      finalMods = finalMods.filter(m=>m.origin!='')
       if(finalMods.join()==prevUser.currentMods.join()) return prevUser
       const newUser: Player = { ...prevUser, currentMods: finalMods };
       return newUser
