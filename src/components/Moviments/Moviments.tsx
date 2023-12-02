@@ -40,9 +40,8 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
 
   useEffect(()=>{
     const getMoviments = async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let bruteData: any[] = (await GetMovimentService.get()).data
-      bruteData = bruteData.sort((a,b)=>a.id - b.id)
+      let bruteData: CommumMoviment[] = (await GetMovimentService.get()).data
+      bruteData = bruteData.sort((a,b)=>a.name.localeCompare(b.name))
       setCommumMoviments(bruteData.map(m=>({...m, kind: 'Commum'})))
       setCapactiePerCommumMoviment(Array(bruteData.length).fill(''))
     }
