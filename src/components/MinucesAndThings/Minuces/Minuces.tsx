@@ -29,7 +29,7 @@ const Minuces: React.FC<Props> = ({ user, setUser }) => {
 
   const addNewMinuce = () => {
     setMinucies(prevMinucies => {
-      const newMinucies = [...prevMinucies, {name: 'Traço', relative: 'Relativo?', description: 'Descrição', applicated: true, imageUrl: ''}];
+      const newMinucies = [...prevMinucies, {name: 'Traço '+prevMinucies.length, relative: 'Relativo?', description: 'Descrição', applicated: true, imageUrl: ''}];
       return newMinucies;
     });
   }
