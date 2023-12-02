@@ -17,6 +17,7 @@ import GetRecentCharacterService from './services/GetRecentCharacterService';
 import { ToastContainer } from 'react-toastify';
 import Roll from './components/Roll/Roll';
 import { LevelMeaning } from './components/Attibutes/components/definitions';
+import { toast } from 'react-toastify';
 
 function App() {
   const [user, setUser] = useState<Player>(BLANK_PLAYER)
@@ -71,6 +72,8 @@ function App() {
         const response = await GetRecentCharacterService.get(playerId, auth)
         if(response){
           return response.data as Player
+        }else{
+          toast.dismiss()
         }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch(e: any) {

@@ -31,7 +31,7 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
   const addNewThing = () => {
     setThings(prevThings => {
       const newThings: Thing [] = [...prevThings, {
-        name: 'Item', description: 'Descrição',
+        name: 'Item '+prevThings.length, description: 'Descrição',
         relativeCapacity: 'Relativo?', gliph: 'FF',
         applicated: true,
         imageUrl: '',

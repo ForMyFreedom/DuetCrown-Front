@@ -6,7 +6,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #272727;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -110,7 +110,20 @@ button:focus-visible {
   a:hover {
     color: #747bff;
   }
-  button {
+  button, .modal-content button, .modal-content li {
+    background-color: #f9f9f9;
+    color: #213547;
+  }
+
+  .editable-text-area {
+    background-color: #f9f9f9;
+  }
+
+  .modal {
+    color: #f9f9f9;
+  }
+
+  .mod-keyword--group li:hover {
     background-color: #f9f9f9;
   }
 }

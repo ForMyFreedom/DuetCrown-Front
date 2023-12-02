@@ -29,7 +29,7 @@ const ApplyNumberInUnit: React.FC<Props> = ({ data, setData, decrease, increase,
             setIsHolding(true)
             setIsUpdateModalOpen(true)
             setMod(mod)
-        }, 750);
+        }, 1000);
     }
 
     const removeHold = (codeFuction: ()=>void) => {

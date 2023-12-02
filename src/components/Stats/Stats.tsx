@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState, ReactElement, useEffect } from 'react';
 import '../Attibutes/Capacities.css'
 import './Stats.css'
-import { Capacities, ExtendedSignal, Gliph, Player, Stat, StatConst, getGliphAfterMod, solveDMG, subtractGliphs, sumSignal } from '../../UserDomain'
+import { Capacities, ExtendedSignal, Gliph, Modification, Player, Stat, StatConst, getGliphAfterMod, solveDMG, subtractGliphs, sumSignal } from '../../UserDomain'
 import { ResultTextOptions } from '../Attibutes/components/definitions';
 import AttributeHandler from '../Attibutes/abstract/AttributeHandler';
 import UnitChallenge from '../Attibutes/components/UnitChallenge';
@@ -202,11 +202,13 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
   }
 
   function getStatUnitAtribute(index: number, stat: Stat, isRollable: boolean): ReactElement {
-    const name = generalTranslator(stat.relativeCapacity)
     return <div key={index} className='stat-flex-box'>
       <UnitAtribute
-        key={`${name}-${stat.kind}`}
-        name={`${name} [${stat.kind}]`}
+        key={`${stat.relativeCapacity}-${stat.kind}`}
+        name={stat.relativeCapacity}
+        kind={{name: 'stat', stat: stat.kind}}
+        modifications={user.currentMods}
+        setMods={(mods: Modification[]) => setUser(prevUser => {return {...prevUser, currentMods: mods}})}
         challenge={challenge} value={getFinalStatValue(stat.relativeCapacity, stat.naturalMod)} setAttributeValue={(v: Gliph) => handleSetStat(stat, v)}
         setCifraResult={setCifrasResult} setTextResult={setTextResult} setExtraResult={setExtraResult} rollCountDuo={rollCountDuo}
         editable={false} rolable={isRollable}
