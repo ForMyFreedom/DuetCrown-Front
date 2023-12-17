@@ -19,7 +19,11 @@ import Roll from './components/Roll/Roll';
 import { LevelMeaning } from './components/Attibutes/components/definitions';
 import { toast } from 'react-toastify';
 
-function App() {
+interface Props {
+  hasRemoteAcess: boolean
+}
+
+const App: React.FC<Props> = ({ hasRemoteAcess }) => {
   const [user, setUser] = useState<Player>(BLANK_PLAYER)
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const jumpRefs: React.MutableRefObject<HTMLElement>[] = Array.from({ length: 10 }, () => useRef<HTMLElement>()) as React.MutableRefObject<HTMLElement>[]
@@ -46,7 +50,6 @@ function App() {
     }
   }, [user?.primaryColor]);
 
-
   const userRef = useRef(user);
 
   useEffect(() => {
@@ -63,6 +66,7 @@ function App() {
     }
 
     const requestUserFromServer = async (): Promise<Player | undefined> => {
+      if(!hasRemoteAcess) { return {} as Player }
       const auth = localStorage.getItem(AUTH_CODE);
       const playerId = localStorage.getItem(PLAYER_ID_CODE);
       if (!auth || !playerId) {
@@ -94,7 +98,7 @@ function App() {
       if (userFromLocal) { setUser(userFromLocal)  }
       else               { setUser(userFromServer) }
     })
-  }, [navigate]);
+  }, [hasRemoteAcess, navigate]);
 
   useEffect(() => {
     userRef.current = user;
@@ -113,7 +117,7 @@ function App() {
 
   return (
     <div>
-      <Navbar userRef={userRef} setUser={setUser} jumpRefs={jumpRefs} navigate={navigate}/>
+      <Navbar hasRemoteAcess={hasRemoteAcess} userRef={userRef} setUser={setUser} jumpRefs={jumpRefs} navigate={navigate}/>
       <ToastContainer />
       <div className="container">
         <span ref={jumpRefs[0]}>

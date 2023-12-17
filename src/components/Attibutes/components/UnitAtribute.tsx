@@ -52,7 +52,7 @@ const UnitAtribute: React.FC<Props> = ({ name, setAttributeName, kind, value, ch
                 value: direction == 1 ? '+' : '-'
             })
         }
-        setMods(newMods)
+        setMods(newMods.filter(mod=>mod.value!=''))
     }
 
     const decrease = () => {
@@ -150,7 +150,6 @@ function findBasicMod(modList: Modification[], kind: UnitKind, name: string, rel
     if(relevantOrigin){
         return result[0]
     } else {
-        console.log(result)
         const aggregated: Modification = {...result[0]}
         aggregated.value=''
         for(const mod of result){

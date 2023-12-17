@@ -6,12 +6,15 @@ import { NavigateFunction } from 'react-router-dom';
 import UpdateCharacterService from '../../services/UpdateCharacterService';
 import { toast } from 'react-toastify';
 import ConfirmationModal from './components/ConfirmationModal';
+import VerifyConnectionsService from '../../services/VerifyConnections';
+import DestroyConnectionService from '../../services/DestroyConnection';
 
 type Props = {
   userRef: React.MutableRefObject<Player>
   setUser: (user: Player) => void
   jumpRefs: React.MutableRefObject<HTMLElement>[]
   navigate: NavigateFunction
+  hasRemoteAcess: boolean
 };
 
 export const SAFE_MODE_CODE = 'isSafeMode'
@@ -19,11 +22,13 @@ export const PLAYER_CODE = 'player'
 export const AUTH_CODE = 'auth'
 export const PLAYER_ID_CODE = 'player_id'
 
-const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate }) => {
+const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate, hasRemoteAcess }) => {
   const [isJumpModalOpen, setIsJumpModalOpen] = useState(false)
   const fileInputRef: RefObject<HTMLInputElement> = useRef(null);
   const menuOption = useRef<HTMLDivElement>(null);
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
+  const [countOfConnections, setCountOfConnections] = useState<number>(0);
+
 
   const [isSafeMode, setIsSafeMode] = useState<boolean>(
     localStorage.getItem(SAFE_MODE_CODE) ? Boolean(Number(localStorage.getItem(SAFE_MODE_CODE))) : false
@@ -36,6 +41,25 @@ const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate }) => {
       window.removeEventListener('beforeunload', handleBeforeUnloadCallback);
     };
   }, [isSafeMode, userRef]);
+
+  useEffect(() => {
+    const run = () => {
+      const auth = localStorage.getItem(AUTH_CODE)
+      const playerId = localStorage.getItem(PLAYER_ID_CODE)
+      if(auth){
+        VerifyConnectionsService.verify(auth).then((result) => {
+          setCountOfConnections(result?.data.find((c: { id: string | null; })=>c.id==playerId).amount)
+        })
+      }
+    }
+
+    run()
+
+    const interval = setInterval(() => {
+      run()
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   /* // @@@
   window.onscroll = function() {scrollFunction()};
@@ -82,6 +106,10 @@ const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate }) => {
   }
 
   const logout = () => {
+    const auth = localStorage.getItem(AUTH_CODE)
+    if(auth){
+      DestroyConnectionService.destroy(auth)
+    }
     localStorage.removeItem(AUTH_CODE)
     localStorage.removeItem(PLAYER_ID_CODE)
     localStorage.removeItem(PLAYER_CODE)
@@ -136,6 +164,9 @@ const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate }) => {
   return (
     <div className="navbar" id='navbar'>
       <h1 className="header mid-hover" onClick={()=>setIsJumpModalOpen(!isJumpModalOpen)}>Ficha DuetCrown</h1>
+      <h2 className='connection-amount'>
+        {countOfConnections} {countOfConnections>1 ? 'Conexões' : 'Conexão'}
+      </h2>
       {isJumpModalOpen &&
       <div className='jump-modal'>
         <button onClick={()=>jumpTo(0)}>Imagem</button>
@@ -151,10 +182,12 @@ const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate }) => {
       </div>
       }
       <div ref={menuOption} className="navbar-options">
-        <div className='button-group--nav'>
-          <button onClick={updateUser}>Atualizar</button>
-          <button onClick={refreshUser}>Recarregar</button>
-        </div>
+        {hasRemoteAcess &&
+          <div className='button-group--nav'>
+            <button onClick={updateUser}>Atualizar</button>
+            <button onClick={refreshUser}>Recarregar</button>
+          </div>
+        }
         <div className='button-group--nav'>
           <a onClick={downloadBackup}>
             <button>Baixar Backup</button>

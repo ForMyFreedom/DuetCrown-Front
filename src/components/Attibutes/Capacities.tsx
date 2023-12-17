@@ -22,7 +22,7 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
 
 const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacities, baseAtributeData, showAddNewAtributeButton = false, ...props }) => {
   const [challenge, setChallenge] = useState<Gliph>('FF')
-  const [atributes, setAtributes] = useState(baseAtributeData)
+  const [atributes,] = useState(baseAtributeData)
 
   const cifraResultDuo = useState('👑👑')
   const extraResultDuo = useState('0')
@@ -64,7 +64,7 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
     return newCapacities
   }, [user.capacities, user.currentMods])
 
-  const [peculiarCapacities, setPeculiarCapacities] = useState<Capacities['peculiars']>(moddedCapacities.peculiars)
+  const [, setPeculiarCapacities] = useState<Capacities['peculiars']>(moddedCapacities.peculiars)
 
   useEffect(()=>{
     setPeculiarCapacities(prevCap => {
@@ -72,6 +72,7 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
     })
   }, [user.capacities.peculiars])
 
+  /**
   useEffect(() => {
     setUser(prevUser => {
       const newCapacities = { ...prevUser.capacities, peculiars: peculiarCapacities };
@@ -83,7 +84,8 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
         return { ...prevAtr, peculiars: newPeculiars };
       });
     }
-  }, [peculiarCapacities, setUser, showAddNewAtributeButton]);
+  }, [peculiarCapacities, setUser]);
+  **/
   
   useEffect(() => {
     setPeculiarCapacities(prevCap => {
@@ -92,12 +94,12 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
       for(const name of notBlankCapNames) {
         newCaps[name] = prevCap[name]
       }
-      if(Object.keys(prevCap).length != Object.keys(newCaps).length){
+      if(!isEqualObject(prevCap, newCaps)){
         return newCaps;
       }
       return prevCap
     });
-  }, [setPeculiarCapacities, peculiarCapacities]);
+  }, [setPeculiarCapacities]);
   
 
   const addNewAttribute = () => {

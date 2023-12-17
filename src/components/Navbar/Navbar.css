@@ -12,6 +12,11 @@
     width: 100%;
 }
 
+.connection-amount{
+    margin-left: 30%;
+    text-wrap: nowrap;
+}
+
 .button-group--nav {
     display: flex;
     flex-direction: column;
@@ -31,5 +36,8 @@
         max-width: 80%;
         font-size: calc(12px + 0.5vw);
         transform: translate(-50%, -50%);
+    }
+    .connection-amount{
+        margin-left: 0%;
     }
 }

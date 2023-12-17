@@ -47,7 +47,7 @@ const Minuces: React.FC<Props> = ({ user, setUser }) => {
 
   const handleNameChange = (index: number, value: string) => {
     const oldValue = minucies[index].name;
-    while(someMinuceOrThingHasThisName(user, value)) {
+    while(value != oldValue && someMinuceOrThingHasThisName(user, value)) {
       value += '*'
     }
     setMinucies(prevMinuces => {

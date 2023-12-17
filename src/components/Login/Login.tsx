@@ -36,6 +36,10 @@ const Login = () => {
     navigate('/register')
   }
 
+  const gotoTest = () => {
+    navigate('/test')
+  }
+
   return (
     <div className='login'>
       <h1 className='header-text'>DuetCrown</h1>
@@ -47,6 +51,7 @@ const Login = () => {
         <input  className='login-input'  type='password' id='password' />
         <button className='login-button' type='submit'>Entrar</button>
         <button className='login-button margin-top-1' onClick={goToRegister} type='button'>Registrar</button>
+        <button className='login-button margin-top-1' onClick={gotoTest}>Testar!</button>
         {isLoading && <div>Carregando...</div>}
         {error && <div className='login-error'>{error}</div>}
       </form>

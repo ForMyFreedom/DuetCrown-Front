@@ -1,12 +1,19 @@
-import { Capacities, Gliph, Player } from "../../../UserDomain"
+import { Capacities, ExtendedSignal, Gliph, Player, getGliphAfterMod, sumSignal } from "../../../UserDomain"
 import { generalInverseTranslator } from "../../Attibutes/Definitions"
 
-export const getGliphFromCapacityName = (user: Player, relativeCapacity: string|undefined): Gliph|undefined => {
+export const getGliphFromCapacityName = (user: Player, relativeCapacity: string|undefined, withMods: boolean = false): Gliph|undefined => {
   if(!relativeCapacity) { return undefined }
-  const notTranslated = getGliph(user, relativeCapacity)
-  if(notTranslated) { return notTranslated }
-  const translated = getGliph(user, generalInverseTranslator(relativeCapacity))
-  return translated
+  let extraSignal: ExtendedSignal = ''
+  if(withMods){
+    const mods = user.currentMods
+      .filter(mod => mod.kind == 'capacity')
+      .filter(mod => mod.keywords[0] == relativeCapacity || mod.keywords[0] == generalInverseTranslator(relativeCapacity))
+    extraSignal = mods.map(mod => mod.value).reduce(sumSignal, '')
+  }
+
+  const gliph = getGliph(user, relativeCapacity) || getGliph(user, generalInverseTranslator(relativeCapacity))
+  if(!gliph) { return undefined }
+  return getGliphAfterMod(gliph, extraSignal)
 }
 
 function getGliph(user: Player, relativeCapacity: string): Gliph|undefined {

@@ -4,6 +4,7 @@ import App from './App.tsx'
 import './index.css'
 import Login from './components/Login/Login.tsx'
 import Register from './components/Register/Register.tsx'
+import TestApp from './TestApp.tsx'
 
 const router = createBrowserRouter([
   {
@@ -15,8 +16,12 @@ const router = createBrowserRouter([
     element: <Register />
   },
   {
+    path: '/test',
+    element: <TestApp />
+  },
+  {
     path: '/',
-    element: <App />
+    element: <App hasRemoteAcess={true} />
   }
 ])
 

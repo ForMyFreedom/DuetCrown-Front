@@ -240,7 +240,7 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
                 <p>
                   {`${generalTranslator(capName)}
                     ${capName!='combined' && capName!='commum'
-                      ? `[${getGliphFromCapacityName(user, capName)}]`
+                      ? `[${getGliphFromCapacityName(user, capName, true)}]`
                       : ''
                     }`
                   }
