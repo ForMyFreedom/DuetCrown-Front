@@ -48,7 +48,7 @@ const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate, hasRemo
       const playerId = localStorage.getItem(PLAYER_ID_CODE)
       if(auth){
         VerifyConnectionsService.verify(auth).then((result) => {
-          setCountOfConnections(result?.data.find((c: { id: string | null; })=>c.id==playerId).count)
+          setCountOfConnections(result?.data.find((c: { id: string | null; })=>c.id==playerId).amount)
         })
       }
     }
