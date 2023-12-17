@@ -53,14 +53,18 @@ const UnitPrimal: React.FC<Props> = ({ data, setAttributeValue, setKind }) => {
         verifyInversion(newValue)
     }
 
+    const checkIfIsNumber = (v: number|null) => {
+        return v == 0 || !v
+    }
+
     return (
         <div className='challenge'>
-            <div className={`grid-item ${data.value && data.value >= 100 ? (data.kind == 'Hope' ? 'special-hope' : 'special-despair') : ''}`}>
-                {data.value ? (
+            <div className={`grid-item ${checkIfIsNumber(data.value) && data.value >= 100 ? (data.kind == 'Hope' ? 'special-hope' : 'special-despair') : ''}`}>
+                {checkIfIsNumber(data.value) ? (
                     <>
                         <b>{TRANSLATE_PRIMAL[data.kind]}: </b>
                         <ApplyNumberInUnit
-                            data={data.value}
+                            data={data.value as number}
                             setData={setAttributeValue}
                             decrease={decrease}
                             increase={increase}
