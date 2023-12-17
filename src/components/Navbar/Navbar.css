@@ -12,6 +12,11 @@
     width: 100%;
 }
 
+.connection-amount{
+    position: relative;
+    left: 20%;
+}
+
 .button-group--nav {
     display: flex;
     flex-direction: column;
