@@ -13,8 +13,8 @@
 }
 
 .connection-amount{
-    position: relative;
-    left: 20%;
+    margin-left: 30%;
+    text-wrap: nowrap;
 }
 
 .button-group--nav {
@@ -36,5 +36,8 @@
         max-width: 80%;
         font-size: calc(12px + 0.5vw);
         transform: translate(-50%, -50%);
+    }
+    .connection-amount{
+        margin-left: 0%;
     }
 }
