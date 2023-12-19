@@ -101,12 +101,12 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
   };
 
   const getIsOkGliph = (thing: Thing): boolean => {
-    if(!thing.relativeCapacity || !thing.gliph) { return false }
+    if(!thing.relativeCapacity || !thing.gliph) { return true }
     const capGliph = getGliphFromCapacityName(user, thing.relativeCapacity)
     if(capGliph) {
       return isGliphInConformity(capGliph, thing.gliph)
     } else {
-      return false
+      return true
     }
   }
 
