@@ -10,7 +10,6 @@ export const getGliphFromCapacityName = (user: Player, relativeCapacity: string|
       .filter(mod => mod.keywords[0] == relativeCapacity || mod.keywords[0] == generalInverseTranslator(relativeCapacity))
     extraSignal = mods.map(mod => mod.value).reduce(sumSignal, '')
   }
-
   const gliph = getGliph(user, relativeCapacity) || getGliph(user, generalInverseTranslator(relativeCapacity))
   if(!gliph) { return undefined }
   return getGliphAfterMod(gliph, extraSignal)

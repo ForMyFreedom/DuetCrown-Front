@@ -61,21 +61,6 @@ const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate, hasRemo
     return () => clearInterval(interval);
   }, []);
 
-  /* // @@@
-  window.onscroll = function() {scrollFunction()};
-
-  function scrollFunction() {
-    const scrollPosition = Math.max(document.body.scrollTop, document.documentElement.scrollTop)
-    if (menuOption?.current) {
-      const distanceFromTop = menuOption.current.offsetTop - scrollPosition
-      console.log(distanceFromTop)
-      const opacity = 1 - Math.max(0, (10 - distanceFromTop) / 100)
-      menuOption.current.style.opacity = opacity.toString()
-      menuOption.current.style.width = opacity.toString()
-    }
-  }
-  */
-
   const updateUser = () => {
     const id = localStorage.getItem(PLAYER_ID_CODE)
     const auth = localStorage.getItem(AUTH_CODE)
