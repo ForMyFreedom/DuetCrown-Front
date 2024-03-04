@@ -156,7 +156,7 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
                   className={`anti-margin list-atr-p ${getIsOkGliph(thing) ? '' : 'bad-gliph-effect'}`}
                 />
               }
-              <p className='anti-margin italic'>{isGliphInRegularity(thing.gliph, getGliphFromCapacityName(user, thing.relativeCapacity))}</p>
+              <p className='anti-margin italic'>{isGliphInRegularity(thing.gliph, getGliphFromCapacityName(user, thing.relativeCapacity, true))}</p>
               <button onClick={()=>handleEquipedToggled(index)}>{thing.applicated ? 'Equipado' : 'Desequipado'}</button>
               <ModPlayerHandler user={user} target={thing} setTarget={handleModificationChange(index)} setUser={setUser} />
             </ul>
