@@ -25,7 +25,7 @@ const UnitPrimal: React.FC<Props> = ({ data, setAttributeValue, setKind }) => {
     }
 
     const decrease = () => {
-        if(!data.value) { return }
+        if(data.value !=0 && !data.value) { return }
         const newValue = (data.kind=='Hope') ? data.value-1 : data.value+1 
         setAttributeValue(newValue)
         verifyInversion(newValue)
@@ -47,14 +47,14 @@ const UnitPrimal: React.FC<Props> = ({ data, setAttributeValue, setKind }) => {
     }
     
     const increase = () => {
-        if(!data.value) { return }
+        if(data.value !=0 && !data.value) { return }
         const newValue = (data.kind=='Hope') ? data.value+1 : data.value-1 
         setAttributeValue(newValue)
         verifyInversion(newValue)
     }
 
     const checkIfIsNumber = (v: number|null) => {
-        return v == 0 || !v
+        return v == 0 || v
     }
 
     return (

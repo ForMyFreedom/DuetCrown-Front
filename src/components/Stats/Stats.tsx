@@ -152,7 +152,7 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
 
   const handleSetStat = (oldStat: Stat, gliph: Gliph) => {
     setStats(prevStats => {
-      let relativeGliph = getGliphFromCapacityName(user, oldStat.relativeCapacity)
+      let relativeGliph = getGliphFromCapacityName(user, oldStat.relativeCapacity, false)
       if(!relativeGliph) { return prevStats }
 
       for(const mod of user.currentMods) {

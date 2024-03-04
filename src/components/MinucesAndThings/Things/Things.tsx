@@ -101,12 +101,12 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
   };
 
   const getIsOkGliph = (thing: Thing): boolean => {
-    if(!thing.relativeCapacity || !thing.gliph) { return false }
+    if(!thing.relativeCapacity || !thing.gliph) { return true }
     const capGliph = getGliphFromCapacityName(user, thing.relativeCapacity)
     if(capGliph) {
       return isGliphInConformity(capGliph, thing.gliph)
     } else {
-      return false
+      return true
     }
   }
 
@@ -156,7 +156,7 @@ const Things: React.FC<Props> = ({ user, setUser }) => {
                   className={`anti-margin list-atr-p ${getIsOkGliph(thing) ? '' : 'bad-gliph-effect'}`}
                 />
               }
-              <p className='anti-margin italic'>{isGliphInRegularity(thing.gliph, getGliphFromCapacityName(user, thing.relativeCapacity))}</p>
+              <p className='anti-margin italic'>{isGliphInRegularity(thing.gliph, getGliphFromCapacityName(user, thing.relativeCapacity, true))}</p>
               <button onClick={()=>handleEquipedToggled(index)}>{thing.applicated ? 'Equipado' : 'Desequipado'}</button>
               <ModPlayerHandler user={user} target={thing} setTarget={handleModificationChange(index)} setUser={setUser} />
             </ul>

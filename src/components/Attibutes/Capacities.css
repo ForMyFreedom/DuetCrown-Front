@@ -103,7 +103,9 @@
 
 .multi-render {
   display: flex;
+  flex: 20%;
   min-width: 100%;
+  flex-wrap: wrap !important;
   align-items: stretch !important;
 }
 
@@ -111,13 +113,6 @@
   color: rgb(165, 165, 165);
   display: flex;
   width: 100%;
-}
-
-.multi-render {
-  display: flex;
-  flex: 20%;
-  flex-wrap: wrap;
-  align-items: center;
 }
 
 .multi-render-bigger {

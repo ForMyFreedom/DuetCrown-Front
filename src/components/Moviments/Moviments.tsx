@@ -93,13 +93,13 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
     if (mov.kind=='Combined') {
       const allCapacities = mov.relativeCapacity.split('|')
       const gliphArray: Gliph[] = allCapacities
-        .map(capName=>getGliphFromCapacityName(user, capName))
+        .map(capName=>getGliphFromCapacityName(user, capName, true))
         .filter(gliph => gliph !== undefined) as Gliph[]
       
       const combinatedGliph = getMeanOfGliphs(gliphArray)
       return combinatedGliph
     } else {
-      const gliph = getGliphFromCapacityName(user, mov.relativeCapacity);
+      const gliph = getGliphFromCapacityName(user, mov.relativeCapacity, true);
       if(gliph != undefined){
         return getGliphAfterMod(gliph, mov.agregated)
       }
