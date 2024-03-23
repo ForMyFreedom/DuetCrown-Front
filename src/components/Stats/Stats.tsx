@@ -108,7 +108,7 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
     const allStats: Stat[] = [...specialStats, ...basicsStats, ...peculiarsStats].filter(a => (a.kind == 'VIT' && (a.relativeCapacity == 'body' || a.relativeCapacity == 'mind')) || a.kind!='VIT')
     const filteredStats = filterStat(user, allStats, false)
     return filteredStats.sort((a, b) => generalTranslator(a.relativeCapacity).localeCompare(generalTranslator(b.relativeCapacity)))
-  }, [user])
+  }, [user, user.capacities.peculiars])
 
   const getDmgVitStat = useMemo(() => {
     const specialStats: Stat[] = getAllDmgVitStat(user, 'specials')
@@ -122,7 +122,7 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
       }
     }
     return filteredStats.sort((a, b) => a.kind.localeCompare(b.kind))
-  }, [statWithMod, user])
+  }, [statWithMod, user, user.capacities.peculiars])
 
   const getAtkDefStat = useMemo(() => {
     const peculiarsStats: Stat[] = getAllAtkDefStat(user, 'peculiars')
@@ -138,7 +138,7 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
       }
     }
     return filteredStats
-  }, [statWithMod, user])
+  }, [statWithMod, user, user.capacities.peculiars])
 
   const cifraResultDuo = useState('👑👑')
   const extraResultDuo = useState('0')
