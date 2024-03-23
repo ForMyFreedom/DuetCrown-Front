@@ -62,7 +62,7 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
       }
     }
     return newCapacities
-  }, [user.capacities, user.currentMods])
+  }, [user.capacities, user.currentMods, user.capacities.peculiars])
 
   const [, setPeculiarCapacities] = useState<Capacities['peculiars']>(moddedCapacities.peculiars)
 
@@ -72,44 +72,12 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
     })
   }, [user.capacities.peculiars])
 
-  /**
-  useEffect(() => {
-    setUser(prevUser => {
-      const newCapacities = { ...prevUser.capacities, peculiars: peculiarCapacities };
-      return { ...prevUser, capacities: newCapacities };
-    });
-    if (showAddNewAtributeButton) {
-      setAtributes(prevAtr => {
-        const newPeculiars = { ...prevAtr.peculiars, ...peculiarCapacities };
-        return { ...prevAtr, peculiars: newPeculiars };
-      });
-    }
-  }, [peculiarCapacities, setUser]);
-  **/
-  
-  useEffect(() => {
-    setPeculiarCapacities(prevCap => {
-      const notBlankCapNames = Object.keys(prevCap).filter(m => m !== '')
-      const newCaps: Capacities['peculiars'] = {}
-      for(const name of notBlankCapNames) {
-        newCaps[name] = prevCap[name]
-      }
-      if(!isEqualObject(prevCap, newCaps)){
-        return newCaps;
-      }
-      return prevCap
-    });
-  }, [setPeculiarCapacities]);
-  
-
   const addNewAttribute = () => {
-    setPeculiarCapacities(prevCapacities => {
-      const newCapacities = {
-        ...prevCapacities,
-        [`Capacidade ${Object.keys(prevCapacities).length+1}`]: 'FF'
-      };
-      return newCapacities as Capacities['peculiars'];
-    });
+    const newCapacities: Capacities = {...user.capacities, peculiars: {
+      ...user.capacities.peculiars, [`Capacidade ${Object.keys(user.capacities.peculiars).length+1}`]: 'FF'
+    }}
+
+    setCapacities(newCapacities)
   };
 
   function renameAttribute(oldKey: keyof Capacities['peculiars'], newKey: keyof Capacities['peculiars']) {
@@ -120,11 +88,13 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
       newObj[k] = user.capacities['peculiars'][k]
     }
 
-    newObj[newKey] = oldValue
-  
-    setPeculiarCapacities(newObj as unknown as Capacities['peculiars'])
+    if(newKey!=''){
+      newObj[newKey] = oldValue
+    }
+    setPeculiarCapacities(newObj as Capacities['peculiars'])
 
     setUser(prevUser => {
+      prevUser.capacities.peculiars = newObj
       for(const thing of prevUser.things) {
         if(thing.relativeCapacity == oldKey){
           thing.relativeCapacity = newKey as string
