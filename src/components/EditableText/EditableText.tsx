@@ -4,7 +4,7 @@ import './EditableText.css';
 
 type EditableTextProps = React.HTMLAttributes<HTMLDivElement> & {
     text: string;
-    dataSetter: (value: string) => void;
+    dataSetter: (value: string, reupdate?: {t: string}) => void;
     extraTextRender?: (value: string) => string;
     filter?: (value: string) => string;
     ignoreEnter?: boolean;
@@ -37,11 +37,13 @@ const EditableText: React.FC<EditableTextProps> = ({ disabled, text, filter, dat
             return
         }
         setIsEditing(false);
-        const finalText = filter
+        let finalText = filter
             ? filter(textareaRef.current?.innerText || '')
             : textareaRef.current?.innerText || ''
 
-        dataSetter(finalText)
+        const reupdate = {t: ''}
+        dataSetter(finalText, reupdate)
+        if(reupdate.t!=''){ finalText = reupdate.t }
         setEditedText(finalText)
     };
 

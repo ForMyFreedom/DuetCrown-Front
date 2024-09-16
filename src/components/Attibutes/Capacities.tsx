@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './Capacities.css'
-import { Capacities, Gliph, Modification, Player, Stat, getGliphAfterMod, inverseSignal } from '../../UserDomain'
+import { Capacities, Gliph, GliphConst, Modification, Player, ProgessInCapacities, Stat, getGliphAfterMod, inverseSignal } from '../../UserDomain'
 import UnitAtribute from './components/UnitAtribute';
 import UnitChallenge from './components/UnitChallenge';
 import { TRANSLATE_KIND_ATRIBUTE } from './Definitions';
@@ -141,7 +141,7 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
     })
   }
 
-  function MultiRender<T extends keyof Capacities>(key: T, editable: boolean): JSX.Element[] {
+  function MultiRender<T extends keyof ProgessInCapacities>(key: T, editable: boolean): JSX.Element[] {
     const setMultiValue = (name: string) => {
       return (value: Gliph) => {
         const newCaps: Capacities = {...user.capacities}
@@ -171,30 +171,27 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
           <div className='flex-row'>
             <p className='progress'>Evolução:</p>
             <EditableText
-                text={user.progress[key][internalKey]?.evo ?? '0'}
+                text={String(user.progress[key][internalKey]?.evo) ?? '0'}
                 className='progress'
-                dataSetter={(_v: string) => {setUser(prevUser => {
-                  const newProgress = {...prevUser.progress}
-                  if(!newProgress[key][internalKey]){
-                    newProgress[key][internalKey] = {evo: Number(_v), glyph: 'FF'}
-                  } else {
-                    newProgress[key][internalKey].evo = Number(_v)
-                  }
-                  return {...prevUser, progress: newProgress}
+                dataSetter={(_v: string, reupdate) => {setUser(prevUser => {
+                  const newProgress = {...prevUser.progress} as ProgessInCapacities
+                  const evo = Number(_v)
+                  const progressGlyph = newProgress[key][internalKey]?.glyph ?? 'FF'
+                  const actualGlyph = user.capacities[key][internalKey] as Gliph
+                  const [finalActualGlyph, finalEvo, finalProgressGlyph] = makeEvo(actualGlyph, evo, progressGlyph)
+                  
+                  newProgress[key][internalKey] = {evo: finalEvo, glyph: finalProgressGlyph} as ProgessInCapacities[T][keyof Capacities[T]]
+                  if(reupdate) { reupdate.t = finalEvo.toString() }
+                  return{...prevUser, progress: newProgress, capacities: {...user.capacities, [key]: {...user.capacities[key], [internalKey]: finalActualGlyph}} }
                 })}}
                 extraTextRender={(v: string)=>v+'%'}
             />
             <EditableText
                 text={user.progress[key][internalKey]?.glyph ?? 'FF'}
                 className='progress'
+                disabled={true}
                 dataSetter={(_v: string) => {setUser(prevUser => {
-                  const newProgress = {...prevUser.progress}
-                  if(!newProgress[key][internalKey]){
-                    newProgress[key][internalKey] = {evo: 0, glyph: _v}
-                  } else {
-                    newProgress[key][internalKey].glyph = _v
-                  }
-                  return {...prevUser, progress: newProgress}
+                  return prevUser
                 })}}
             />
           </div>
@@ -242,5 +239,28 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
     />
   );
 };
+
+function makeEvo(actualGlyph: Gliph, evoPercentage: number, evoGlyph: Gliph): [Gliph, number, Gliph] {
+  let actualGlyphIndex = GliphConst.indexOf(actualGlyph)
+  let evoGlyphIndex = GliphConst.indexOf(evoGlyph)
+  if(evoPercentage<0) { return [actualGlyph, evoPercentage, evoGlyph] }
+  if(evoGlyphIndex > actualGlyphIndex) {
+    evoGlyphIndex = actualGlyphIndex
+  }
+
+  while (evoPercentage>=100) {
+    evoGlyphIndex += 1
+    if (evoGlyphIndex > actualGlyphIndex){
+      actualGlyphIndex += 1
+      evoGlyphIndex = 0
+    }
+    evoPercentage -= 100
+  }
+
+  actualGlyphIndex = (actualGlyphIndex > GliphConst.length-1) ? GliphConst.length-1 : actualGlyphIndex
+  evoGlyphIndex = (evoGlyphIndex > GliphConst.length-1) ? GliphConst.length-1 : evoGlyphIndex
+  
+  return [GliphConst[actualGlyphIndex], evoPercentage, GliphConst[evoGlyphIndex]]
+}
 
 export default CapacitiesElement;
