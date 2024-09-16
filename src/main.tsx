@@ -5,7 +5,6 @@ import './index.css'
 import Login from './components/Login/Login.tsx'
 import Register from './components/Register/Register.tsx'
 import TestApp from './TestApp.tsx'
-import { StrictMode } from 'react'
 
 const router = createBrowserRouter([
   {
@@ -27,7 +26,5 @@ const router = createBrowserRouter([
 ])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <RouterProvider router={router}/>
-  </StrictMode>
+  <RouterProvider router={router}/>
 )
