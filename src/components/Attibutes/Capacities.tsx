@@ -171,14 +171,31 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
           <div className='flex-row'>
             <p className='progress'>Evolução:</p>
             <EditableText
-                text={user.progress[key][internalKey] ?? 0}
+                text={user.progress[key][internalKey]?.evo ?? '0'}
                 className='progress'
                 dataSetter={(_v: string) => {setUser(prevUser => {
                   const newProgress = {...prevUser.progress}
-                  newProgress[key][internalKey] = Number(_v)
+                  if(!newProgress[key][internalKey]){
+                    newProgress[key][internalKey] = {evo: Number(_v), glyph: 'FF'}
+                  } else {
+                    newProgress[key][internalKey].evo = Number(_v)
+                  }
                   return {...prevUser, progress: newProgress}
                 })}}
                 extraTextRender={(v: string)=>v+'%'}
+            />
+            <EditableText
+                text={user.progress[key][internalKey]?.glyph ?? 'FF'}
+                className='progress'
+                dataSetter={(_v: string) => {setUser(prevUser => {
+                  const newProgress = {...prevUser.progress}
+                  if(!newProgress[key][internalKey]){
+                    newProgress[key][internalKey] = {evo: 0, glyph: _v}
+                  } else {
+                    newProgress[key][internalKey].glyph = _v
+                  }
+                  return {...prevUser, progress: newProgress}
+                })}}
             />
           </div>
         }

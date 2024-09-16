@@ -33,7 +33,12 @@ export type Capacities = {
 }
 
 export type ProgessInCapacities = {
-  [T in keyof Omit<Capacities,'primal'>]: Record<keyof Capacities[T], number>
+  [T in keyof Omit<Capacities,'primal'>]: {
+    [key in keyof Capacities[T]]: {
+      evo: number,
+      glyph: Gliph
+    }
+  };
 };
 
 export type CommumMoviment = Pick<Moviment, 'name'|'description'>
