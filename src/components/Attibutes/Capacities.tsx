@@ -171,7 +171,7 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
           <div className='flex-row'>
             <p className='progress'>Evolução:</p>
             <EditableText
-                text={String(user.progress[key][internalKey]?.evo) ?? '0'}
+                text={user.progress[key][internalKey]?.evo ?? '0'}
                 className='progress'
                 dataSetter={(_v: string, reupdate) => {setUser(prevUser => {
                   const newProgress = {...prevUser.progress} as ProgessInCapacities
@@ -243,7 +243,7 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
 function makeEvo(actualGlyph: Gliph, evoPercentage: number, evoGlyph: Gliph): [Gliph, number, Gliph] {
   let actualGlyphIndex = GliphConst.indexOf(actualGlyph)
   let evoGlyphIndex = GliphConst.indexOf(evoGlyph)
-  if(evoPercentage<0) { return [actualGlyph, evoPercentage, evoGlyph] }
+  if(evoPercentage<0) { return [actualGlyph, 0, evoGlyph] }
   if(evoGlyphIndex > actualGlyphIndex) {
     evoGlyphIndex = actualGlyphIndex
   }
