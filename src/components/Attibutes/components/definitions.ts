@@ -1,6 +1,6 @@
 import { Gliph, GliphConst } from "../../../UserDomain"
 
-export const PRIMAL_ODD = 40
+export const PRIMAL_ODD = 1
 
 export type PrimalInterference = 'hope'|'despair'
 export const PRIMAL_MESSAGE: {[_ in PrimalInterference]: string[]} = {
@@ -56,6 +56,7 @@ export const LevelMeaning: {[glyph in Gliph]: string} = {
 
 export function rollValueAgaintChallenge(value: Gliph, challenge: Gliph, rollCount: number, setExtraResult: (v: string)=> void, setCifraResult: (v: string)=> void, setTextResult: (v: string)=>void, setRollCount: (v: number)=>void) {
   setExtraResult('0')
+  setRollCount(rollCount+1)
   const primalInterference = sortPrimalInterference()
   if(primalInterference) {
     setTextResult(PRIMAL_MESSAGE[primalInterference][1])
@@ -85,7 +86,6 @@ export function rollValueAgaintChallenge(value: Gliph, challenge: Gliph, rollCou
   const printResult = (crowns.filter(v=>v=='👑') as string[]).concat(unluck)
   setCifraResult(printResult.join(''))
   setTextResult(ResultTextOptions[ResultAmountOfCrowns[amountOfCrowns] as RollResult])
-  setRollCount(rollCount+1)
 }
 
 function sortPrimalInterference(): PrimalInterference|undefined {
