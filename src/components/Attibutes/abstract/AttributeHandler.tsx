@@ -34,10 +34,8 @@ const AttributeHandler: React.FC<Props> = ({ title, user, setUser, addNewAttribu
       }
     }, 500);
   
-    console.log('a')
     if (resultRef?.current && rollCount!=0) {
       setBlink(true)
-    console.log('b')
       attributeRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start'});
     }
     setHadAngariated(false)
