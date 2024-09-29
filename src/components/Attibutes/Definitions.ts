@@ -51,4 +51,4 @@ export function generalInverseTranslator(capacity: string): string {
     const bySpecials = Object.entries(TRANSLATE_SPECIAL).find(([, value]) => value==capacity)
     if(bySpecials) { return bySpecials[0] }
     return capacity
-  }
+}
