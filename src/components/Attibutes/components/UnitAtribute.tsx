@@ -122,7 +122,7 @@ const UnitAtribute: React.FC<Props> = ({ name, setAttributeName, kind, value, ch
             <div className='internal-grid-item'>
                 <button className='temp-mod-button' onClick={tempDecrease}>⊖</button>
                 <button onClick={decrease}>-</button>
-                <p onClick={rolable ? roll : () => {}} className={rolable ? 'grid-item-p-hover' : ''}>{value}</p>
+                <p onClickCapture={rolable ? roll : () => {}} className={rolable ? 'grid-item-p-hover' : ''}>{value}</p>
                 <button onClick={increase}>+</button>
                 <button className='temp-mod-button' onClick={tempIncrease}>⊕</button>
             </div>

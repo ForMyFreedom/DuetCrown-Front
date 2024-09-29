@@ -1,5 +1,13 @@
 import { Gliph, GliphConst } from "../../../UserDomain"
 
+export const PRIMAL_ODD = 40
+
+export type PrimalInterference = 'hope'|'despair'
+export const PRIMAL_MESSAGE: {[_ in PrimalInterference]: string[]} = {
+  'hope': ['Interferência Primal', 'Esperança Irrestrita'],
+  'despair': ['Interferência Primal', 'Desespero Irrestrito']
+}
+
 export type RollResult = 'Failure'|'Sucess'|'TotalSucess'
 
 export enum ResultAmountOfCrowns {
@@ -13,6 +21,7 @@ export const ResultTextOptions: {[result in RollResult]: string} = {
   Sucess: 'Sucesso Parcial',
   TotalSucess: 'Sucesso Total'
 }
+
 
 export const LevelMeaning: {[glyph in Gliph]: string} = {
   'FF-': 'Abaixo de um Humano',
@@ -47,6 +56,12 @@ export const LevelMeaning: {[glyph in Gliph]: string} = {
 
 export function rollValueAgaintChallenge(value: Gliph, challenge: Gliph, rollCount: number, setExtraResult: (v: string)=> void, setCifraResult: (v: string)=> void, setTextResult: (v: string)=>void, setRollCount: (v: number)=>void) {
   setExtraResult('0')
+  const primalInterference = sortPrimalInterference()
+  if(primalInterference) {
+    setTextResult(PRIMAL_MESSAGE[primalInterference][1])
+    setCifraResult(PRIMAL_MESSAGE[primalInterference][0])
+    return
+  }
   const difOfLevels = getDifOfLevels(value, challenge)
   const vantageCoeficient = getVantage(value) - getVantage(challenge)
   const [crowns, unluck] = applyLevelDif(
@@ -67,10 +82,16 @@ export function rollValueAgaintChallenge(value: Gliph, challenge: Gliph, rollCou
       setExtraResult(String(-amountOfNegativeCrowns))
   }
 
-  const printResult = crowns.filter(v=>v=='👑').concat(unluck)
+  const printResult = (crowns.filter(v=>v=='👑') as string[]).concat(unluck)
   setCifraResult(printResult.join(''))
   setTextResult(ResultTextOptions[ResultAmountOfCrowns[amountOfCrowns] as RollResult])
   setRollCount(rollCount+1)
+}
+
+function sortPrimalInterference(): PrimalInterference|undefined {
+  const d100 = rollD100();
+  if(d100<=PRIMAL_ODD) { return 'despair' }
+  if(d100>100-PRIMAL_ODD) {return 'hope'}
 }
 
 function removeSignals(glyph: Gliph): Gliph {
@@ -117,8 +138,8 @@ function applyVantage(cifras: string[], vantageCoeficient: number): string[] {
 }
 
 function applyLevelDif(cifras: string[], difOfLevels: number): [string[], string[]] {
-  const crowns = cifras.filter(v => v == '👑')
-  const unlucks = cifras.filter(v => v == '⚜️')
+  const crowns: string[] = cifras.filter(v => v == '👑')
+  const unlucks: string[] = cifras.filter(v => v == '⚜️')
 
   for(let i=0 ; i<Math.abs(difOfLevels) ; i++) {
       if (difOfLevels>0) {
@@ -136,4 +157,8 @@ function applyLevelDif(cifras: string[], difOfLevels: number): [string[], string
 
   console.log('level dif: ', cifras)
   return [crowns, unlucks]
+}
+
+function rollD100(){
+  return Math.floor(Math.random()*100)+1
 }
