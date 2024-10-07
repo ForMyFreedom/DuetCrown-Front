@@ -5,9 +5,15 @@ import { generalTranslator } from '../Attibutes/Definitions';
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
   user: Player;
+  setUser: React.Dispatch<React.SetStateAction<Player>>
 };
 
-const Modifications: React.FC<Props> = ({ user }) => {
+const Modifications: React.FC<Props> = ({ user, setUser }) => {
+  const removeMod = (mod: Modification) => {
+    const mods = user.currentMods.filter((m) => m != mod)
+    setUser({...user, currentMods: mods})
+  }
+
   const showThatMod = (index: number, mod: Modification) => {
     const modCopy = {...mod}
     if(modCopy.origin == '*'){
@@ -18,7 +24,7 @@ const Modifications: React.FC<Props> = ({ user }) => {
     const isStat = modCopy.kind == 'stat'
 
     return (
-      <div className='mod-box' key={index}>
+      <div onClick={()=>removeMod(mod)} className='mod-box' key={index}>
         <p>{modCopy.origin}</p>
         <p>{modCopy.keywords[0]} {(isStat ? `[${modCopy.keywords[1]}]` : '')} {modCopy.value}</p>
       </div>

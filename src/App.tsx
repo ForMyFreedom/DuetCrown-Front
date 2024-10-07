@@ -167,7 +167,7 @@ const App: React.FC<Props> = ({ hasRemoteAcess }) => {
           <Anotation user={user} setUser={setUser} />
         </span>
         <span ref={jumpRefs[10]}>
-          <Modifications user={user} />
+          <Modifications user={user} setUser={setUser} />
         </span>
       </div>
     </div>
