@@ -30,6 +30,11 @@ const Modifications: React.FC<Props> = ({ user }) => {
       <div className="list-atr">
         <h2 key='list-heading' className="list-heading">Modificações</h2>
         {user.currentMods.map((mod, index) => showThatMod(index, mod))}
+        {user.currentMods.length == 0 &&
+          <div className='mod-box'>
+            <p>Nenhuma modificação</p>
+          </div>
+        }
       </div>
     </div>
   );
