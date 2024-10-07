@@ -1,21 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Modifications.css'
 import { Modification, Player } from '../../UserDomain'
 import { generalTranslator } from '../Attibutes/Definitions';
+import { isEqualArray } from '../../utils';
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
   user: Player;
-  setUser: React.Dispatch<React.SetStateAction<Player>>
+  setUser: React.Dispatch<React.SetStateAction<Player>>;
 };
 
 const Modifications: React.FC<Props> = ({ user, setUser }) => {
-  const removeMod = (mod: Modification) => {
-    const mods = user.currentMods.filter((m) => m != mod)
-    setUser({...user, currentMods: mods})
+  const [mods, setMods] = useState(user.currentMods)
+
+  useEffect(()=>{
+    setMods(prevMods => {
+      return isEqualArray(prevMods, user.currentMods) ? prevMods : user.currentMods
+    })
+  }, [user.currentMods])
+
+  useEffect(() => {
+    setUser(prevUser => {
+      const newUser = { ...prevUser, currentMods: mods };
+      return newUser;
+    });
+  }, [mods, setUser]);
+
+  const removeMod = (toRemoveMod: Modification) => {
+    setMods(prevMods => {return prevMods.filter((m) => m != toRemoveMod)})
   }
 
   const showThatMod = (index: number, mod: Modification) => {
-    const modCopy = {...mod}
+    const modCopy = JSON.parse(JSON.stringify(mod))
     if(modCopy.origin == '*'){
       modCopy.origin = '(Definida pelo Jogador)'
     }
@@ -35,8 +50,8 @@ const Modifications: React.FC<Props> = ({ user, setUser }) => {
     <div className="full-box">
       <div className="list-atr">
         <h2 key='list-heading' className="list-heading">Modificações</h2>
-        {user.currentMods.map((mod, index) => showThatMod(index, mod))}
-        {user.currentMods.length == 0 &&
+        {mods.map((mod, index) => showThatMod(index, mod))}
+        {mods.length == 0 &&
           <div className='mod-box'>
             <p>Nenhuma modificação</p>
           </div>
