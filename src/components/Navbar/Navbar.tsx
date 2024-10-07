@@ -164,6 +164,7 @@ const Navbar: React.FC<Props> = ({ userRef, setUser, jumpRefs, navigate, hasRemo
         <button onClick={()=>jumpTo(7)}>Evoluções/Extensões</button>
         <button onClick={()=>jumpTo(8)}>Minúcias/Coisas</button>
         <button onClick={()=>jumpTo(9)}>Anotações</button>
+        <button onClick={()=>jumpTo(10)}>Modificações</button>
       </div>
       }
       <div ref={menuOption} className="navbar-options">

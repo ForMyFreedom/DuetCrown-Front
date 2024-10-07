@@ -18,6 +18,7 @@ import { ToastContainer } from 'react-toastify';
 import Roll from './components/Roll/Roll';
 import { LevelMeaning } from './components/Attibutes/components/definitions';
 import { toast } from 'react-toastify';
+import Modifications from './components/Modifications/Modifications';
 
 interface Props {
   hasRemoteAcess: boolean
@@ -26,7 +27,7 @@ interface Props {
 const App: React.FC<Props> = ({ hasRemoteAcess }) => {
   const [user, setUser] = useState<Player>(BLANK_PLAYER)
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const jumpRefs: React.MutableRefObject<HTMLElement>[] = Array.from({ length: 10 }, () => useRef<HTMLElement>()) as React.MutableRefObject<HTMLElement>[]
+  const jumpRefs: React.MutableRefObject<HTMLElement>[] = Array.from({ length: 11 }, () => useRef<HTMLElement>()) as React.MutableRefObject<HTMLElement>[]
   const navigate = useNavigate()
 
   const mundainAtributes: Partial<Capacities> = useMemo(() => {
@@ -164,6 +165,9 @@ const App: React.FC<Props> = ({ hasRemoteAcess }) => {
         </span>
         <span ref={jumpRefs[9]}>
           <Anotation user={user} setUser={setUser} />
+        </span>
+        <span ref={jumpRefs[10]}>
+          <Modifications user={user} />
         </span>
       </div>
     </div>

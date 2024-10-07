@@ -1,0 +1,17 @@
+.mod-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 0 20px 0;
+}
+
+.mod-box:hover {
+  background-color: var(--primary-color);
+  opacity: 0.5;
+}
+
+.mod-box p {
+  font-size: 1.5rem;
+  margin: 1px;
+}
