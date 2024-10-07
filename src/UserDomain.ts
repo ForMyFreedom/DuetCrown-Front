@@ -126,7 +126,7 @@ export type Modification = {
   kind: 'capacity' | 'stat'
   value: ExtendedSignal
   origin: string // thing or minucie name
-  keywords: string[] // In case of capacity, is ['name']... In case of stat, is ['relativeCapacity', 'kind']
+  keywords: string[] // In case of capacity, is ['relativeCapacity']... In case of stat, is ['relativeCapacity', 'stat_kind']
 }
 
 

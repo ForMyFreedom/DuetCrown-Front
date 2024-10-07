@@ -1,3 +1,4 @@
+import { SOUNDS } from "../../../assets/assets"
 import { Gliph, GliphConst } from "../../../UserDomain"
 
 export const PRIMAL_ODD = 1
@@ -53,6 +54,8 @@ export const LevelMeaning: {[glyph in Gliph]: string} = {
   'SS+': 'Acima de um Grande Deus',
 }
 
+const primalAudio = new Audio(SOUNDS.primal);
+const rollAudio = new Audio(SOUNDS.roll);
 
 export function rollValueAgaintChallenge(value: Gliph, challenge: Gliph, rollCount: number, setExtraResult: (v: string)=> void, setCifraResult: (v: string)=> void, setTextResult: (v: string)=>void, setRollCount: (v: number)=>void) {
   setExtraResult('0')
@@ -61,6 +64,7 @@ export function rollValueAgaintChallenge(value: Gliph, challenge: Gliph, rollCou
   if(primalInterference) {
     setTextResult(PRIMAL_MESSAGE[primalInterference][1])
     setCifraResult(PRIMAL_MESSAGE[primalInterference][0])
+    primalAudio.play();
     return
   }
   const difOfLevels = getDifOfLevels(value, challenge)
@@ -86,6 +90,7 @@ export function rollValueAgaintChallenge(value: Gliph, challenge: Gliph, rollCou
   const printResult = (crowns.filter(v=>v=='👑') as string[]).concat(unluck)
   setCifraResult(printResult.join(''))
   setTextResult(ResultTextOptions[ResultAmountOfCrowns[amountOfCrowns] as RollResult])
+  rollAudio.play()
 }
 
 function sortPrimalInterference(): PrimalInterference|undefined {

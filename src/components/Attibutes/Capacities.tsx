@@ -80,7 +80,8 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
     setCapacities(newCapacities)
   };
 
-  function renameAttribute(oldKey: keyof Capacities['peculiars'], newKey: keyof Capacities['peculiars']) {
+  function renameAttribute(oldKey: keyof Capacities['peculiars'], newKey: string) {
+    if(oldKey==newKey) { return }
     const oldValue = user.capacities['peculiars'][oldKey]
     const filteredKeys: (keyof Capacities['peculiars'])[] = Object.keys(user.capacities['peculiars']).filter(x => x!=oldKey) as (keyof Capacities['peculiars'])[]
     const newObj: Capacities['peculiars'] = {}
@@ -102,43 +103,61 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
         if(thing.modifications){
           for(const mod of thing.modifications){
             if(mod.keywords[0] == oldKey){
-              mod.keywords = mod.keywords.splice(0, 1, newKey as string)
+              mod.keywords[0] = newKey as string
             }
           }
+          thing.modifications = thing.modifications.filter(mod => mod.keywords[0] != '')
         }
       }
       for(const minuce of prevUser.minucies) {
         if(minuce.modifications){
           for(const mod of minuce.modifications){
             if(mod.keywords[0] == oldKey){
-              mod.keywords = mod.keywords.splice(0, 1, newKey as string)
+              mod.keywords[0] = newKey
             }
           }
+          minuce.modifications = minuce.modifications.filter(mod => mod.keywords[0] != '')
         }
       }
       for(const stat of prevUser.stats) {
         if(stat.relativeCapacity == oldKey) {
-          stat.relativeCapacity = newKey as string
+          stat.relativeCapacity = newKey
         }
       }
+      prevUser.stats = prevUser.stats.filter(stat => stat.relativeCapacity != '')
+
       for(const mov of prevUser.moviments) {
         if(mov.relativeCapacity == oldKey) {
-          mov.relativeCapacity = newKey as string
+          mov.relativeCapacity = newKey
         }
       }
+      prevUser.moviments = prevUser.moviments.filter(mov => mov.relativeCapacity != '')
+      
       for(const mods of prevUser.currentMods) {
         if(mods.keywords[0] == oldKey){
-          mods.keywords = mods.keywords.splice(0, 1, newKey as string)
+          mods.keywords[0] = newKey
         }
       }
+      prevUser.currentMods = prevUser.currentMods.filter(mod => mod.keywords[0] !== '')
+
+      for(const capKey of Object.keys(prevUser.progress['peculiars'])) {
+        if(capKey == oldKey && newKey!='') {
+          prevUser.progress['peculiars'][newKey] = prevUser.progress['peculiars'][oldKey]
+        }
+        prevUser.progress['peculiars'][oldKey] = undefined
+      }
+
       for(const stat of Object.keys(prevUser.toShowStats)) {
         const list = prevUser.toShowStats[stat as Stat['kind']]
         if(list && list.includes(oldKey as string)) {
           prevUser.toShowStats[stat as Stat['kind']] = [...list, newKey as string]?.filter(v=>v!=oldKey)
         }
+        prevUser.toShowStats[stat as Stat['kind']] = prevUser.toShowStats[stat as Stat['kind']]?.filter(v=>v!='')
       }
       return prevUser
     })
+
+    window.location.reload() // i am not that good at react...
   }
 
   function MultiRender<T extends keyof ProgessInCapacities>(key: T, editable: boolean): JSX.Element[] {
