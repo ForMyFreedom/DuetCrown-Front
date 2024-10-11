@@ -21,7 +21,7 @@ jobs:
         uses: bahmutov/npm-install@v1
         
       - name: Set environment variable
-        run: echo "VITE_API_PATH=${{ env.VITE_API_PATH }}" >> .env
+        run: echo "VITE_API_PATH=${{ vars.VITE_API_PATH }}" >> .env
 
       - name: Build project
         run: npm run build
