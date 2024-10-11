@@ -19,6 +19,9 @@ jobs:
 
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
+        
+      - name: Set environment variable
+        run: echo "VITE_API_PATH=${{ secrets.VITE_API_PATH }}" >> .env
 
       - name: Build project
         run: npm run build
@@ -33,8 +36,6 @@ jobs:
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
-    env:
-      VITE_API_PATH: ${{ secrets.VITE_API_PATH }}
     if: github.ref == 'refs/heads/git-deploy'
 
     steps:
@@ -43,10 +44,6 @@ jobs:
         with:
           name: production-files
           path: ./dist
-
-      - name: Set environment variable
-        run: |
-          echo "VITE_API_PATH=$VITE_API_PATH" >> .env
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
