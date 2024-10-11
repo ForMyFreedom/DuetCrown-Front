@@ -44,6 +44,10 @@ jobs:
           name: production-files
           path: ./dist
 
+      - name: Set environment variable
+        run: |
+          echo "VITE_API_PATH=$VITE_API_PATH" >> .env
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
