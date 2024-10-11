@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VITE_API_PATH: ${{ secrets.VITE_API_PATH }}
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/git-deploy'
 
     steps:
       - name: Download artifact
