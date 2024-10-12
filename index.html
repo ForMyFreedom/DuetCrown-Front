@@ -24,5 +24,10 @@
   <body>
     <div id="root" style="width: 100%;"></div>
     
+    <script type="text/javascript">
+      if (window.location.pathname !== '/' && !window.location.pathname.startsWith('/DuetCrown-Front')) {
+        window.location.href = '/DuetCrown-Front/#' + window.location.pathname;
+      }
+    </script>
   </body>
 </html>
