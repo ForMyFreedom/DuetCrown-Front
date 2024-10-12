@@ -45,7 +45,6 @@ const Login = () => {
       <h1 className='header-text'>DuetCrown</h1>
       <h1 className='header-login'>Login</h1>
       <form className='login-form' onSubmit={submitLogin}>
-        <p>{import.meta.env.BASE_URL}</p>
         <label  className='login-label'  htmlFor='name'>Nome</label>
         <input  className='login-input'  type='text' id='name' />
         <label  className='login-label'  htmlFor='password'>Senha</label>
