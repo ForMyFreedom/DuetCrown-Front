@@ -1,6 +1,11 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <script type="text/javascript">
+      if (!window.location.href.includes('?') && window.location.pathname !== '/') {
+        window.location.href = window.location.origin + '/DuetCrown-Front/#' + window.location.pathname;
+      }
+    </script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/duetcrown.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -22,10 +27,5 @@
   <body>
     <div id="root" style="width: 100%;"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script type="text/javascript">
-      if (window.location.pathname !== '/' && !window.location.pathname.startsWith('/DuetCrown-Front')) {
-        window.location.href = '/DuetCrown-Front/#' + window.location.pathname;
-      }
-    </script>
   </body>
 </html>
