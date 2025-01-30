@@ -18,6 +18,7 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
 
 const Stats: React.FC<Props> = ({ user, setUser }) => {
   const [challenge, setChallenge] = useState<Gliph>('FF')
+  const [extraAdvantage, setExtraAdvantage] = useState<number>(0)
   const [stats, setStats] = useState(user.stats)
   const [isHideStatusModalOpen, setIsHideStatusModalOpen] = useState(false)
   const modalRef = useRef<HTMLDivElement>(null);
@@ -205,6 +206,7 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
     return <div key={index} className='stat-flex-box'>
       <UnitAtribute
         user={user}
+        extraAdvantage={extraAdvantage}
         key={`${stat.relativeCapacity}-${stat.kind}`}
         name={stat.relativeCapacity}
         kind={{name: 'stat', stat: stat.kind}}
@@ -269,6 +271,7 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
               <UnitChallenge
                 key='challenge2' value={challenge} setValue={setChallenge}
                 customTitle='Desafio/Dano/Cura:'
+                setExtraAdvantage={setExtraAdvantage}
               />
             </div>
             <div className='multi-render-bigger'>

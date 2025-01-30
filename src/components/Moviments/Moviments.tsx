@@ -22,6 +22,7 @@ interface Props {
 
 const Moviments: React.FC<Props> = ({ user, setUser }) => {
   const [moviments, setMoviments] = useState(user.moviments)
+  const [extraAdvantage, setExtraAdvantage] = useState<number>(0)
   const [visibleMovements, setVisibleMovements] = useState<{ [key: string]: boolean }>({});
   const [capactiePerCommumMoviment, setCapactiePerCommumMoviment] = useState<string[]>([]);
 
@@ -232,6 +233,7 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
               <UnitChallenge
                 key='challenge2' value={challenge} setValue={setChallenge}
                 customTitle='Desafio/Dano:'
+                setExtraAdvantage={setExtraAdvantage}
               />
             </div>
             {Object.entries(movimentsPerCapacities).map(([capName, moviments]) => (
@@ -258,6 +260,7 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
                     <div className='name-container--mov'>
                       <UnitButtonRoll
                         value={getMovimentGlyph(mov)}
+                        extraAdvantage={extraAdvantage}
                         challenge={challenge}
                         setCifraResult={setCifraResult}
                         setTextResult={setTextResult}
@@ -295,6 +298,7 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
                       <UnitButtonRoll
                         value={getGliphFromCapacityName(user, capactiePerCommumMoviment[index]) || 'FF-'}
                         challenge={challenge}
+                        extraAdvantage={extraAdvantage}
                         setCifraResult={setCifraResult}
                         setTextResult={setTextResult}
                         setExtraResult={setExtraResult}

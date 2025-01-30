@@ -59,7 +59,7 @@ export const LevelMeaning: {[glyph in Gliph]: string} = {
 }
 
 
-export function rollValueAgaintChallenge(value: Gliph, challenge: Gliph, rollCount: number, setExtraResult: (v: string)=> void, setCifraResult: (v: string)=> void, setTextResult: (v: string)=>void, setRollCount: (v: number)=>void) {
+export function rollValueAgaintChallenge(value: Gliph, challenge: Gliph, rollCount: number, extraAdvantage: number, setExtraResult: (v: string)=> void, setCifraResult: (v: string)=> void, setTextResult: (v: string)=>void, setRollCount: (v: number)=>void) {
   setExtraResult('0')
   setRollCount(rollCount+1)
   const primalInterference = sortPrimalInterference()
@@ -70,7 +70,7 @@ export function rollValueAgaintChallenge(value: Gliph, challenge: Gliph, rollCou
     return
   }
   const difOfLevels = getDifOfLevels(value, challenge)
-  const vantageCoeficient = getVantage(value) - getVantage(challenge)
+  const vantageCoeficient = getVantage(value) - getVantage(challenge) + extraAdvantage
   const [crowns, unluck] = applyLevelDif(
       applyVantage(
           addRandomCifra(vantageCoeficient), vantageCoeficient

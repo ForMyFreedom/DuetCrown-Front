@@ -24,11 +24,12 @@ type Props =  React.HTMLAttributes<HTMLDivElement> & {
     setTextResult: (v: string) => void
     setExtraResult: (v: string) => void
     setAttributeName?: (v: string) => void
+    extraAdvantage: number
     rollCountDuo: [number, React.Dispatch<React.SetStateAction<number>>]
     bottomComponent?: ReactElement
 };
 
-const UnitAtribute: React.FC<Props> = ({ user, name, setAttributeName, kind, value, challenge, editable, setAttributeValue, setCifraResult, setTextResult, setExtraResult, rollCountDuo, rolable=true, bottomComponent, modifications, setMods, ...props }) => {
+const UnitAtribute: React.FC<Props> = ({ user, name, setAttributeName, extraAdvantage, kind, value, challenge, editable, setAttributeValue, setCifraResult, setTextResult, setExtraResult, rollCountDuo, rolable=true, bottomComponent, modifications, setMods, ...props }) => {
     const [rollCount, setRollCount] = rollCountDuo
     const [tempMod, setTempMod] = useState<ExtendedSignal>('')
     const buffLimit = getBuffLimit(user, name)
@@ -106,7 +107,7 @@ const UnitAtribute: React.FC<Props> = ({ user, name, setAttributeName, kind, val
 
     const roll = () => {
         rollValueAgaintChallenge(
-            value, challenge, rollCount,
+            value, challenge, rollCount, extraAdvantage,
             setExtraResult, setCifraResult, setTextResult, setRollCount
         )
     }

@@ -22,6 +22,7 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
 
 const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacities, baseAtributeData, showAddNewAtributeButton = false, ...props }) => {
   const [challenge, setChallenge] = useState<Gliph>('FF')
+  const [extraAdvantage, setExtraAdvantage] = useState<number>(0)
   const [atributes,] = useState(baseAtributeData)
 
   const cifraResultDuo = useState('👑👑')
@@ -183,6 +184,7 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
     return (Object.keys(values) as (keyof Capacities[T])[]).map((internalKey, index) => {
       return <UnitAtribute user={user} key={index} name={internalKey as string}
         modifications={user.currentMods}
+        extraAdvantage={extraAdvantage}
         kind={{name: 'capacity'}}
         setMods={(mods: Modification[])=> setUser(prevUser=> ({...prevUser, currentMods: mods}))}
         challenge={challenge} value={moddedCapacities[key][internalKey] as Gliph} setAttributeValue={setMultiValue(internalKey as string)}
@@ -245,7 +247,10 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
       addNewAttribute={showAddNewAtributeButton ? addNewAttribute : undefined}
       areaOfAtributes={<>
         <div className='challenge'>
-          <UnitChallenge key='challenge2' value={challenge} setValue={setChallenge}/>
+          <UnitChallenge
+            key='challenge2' value={challenge} setValue={setChallenge}
+            setExtraAdvantage={setExtraAdvantage}
+          />
         </div>
         {Object.keys(atributes).map((attributeKey, index) => {
           return AttributeUnitRender[attributeKey as keyof Capacities](index)
