@@ -1,14 +1,16 @@
-import { ExtendedSignal, Gliph, GliphConst, Modification, SignalsConst, Stat, modifySignal, sumSignal } from '../../../UserDomain';
+import { ExtendedSignal, Gliph, GliphConst, Modification, Player, SignalsConst, Stat, modifySignal, sumSignal } from '../../../UserDomain';
 import EditableText from '../../EditableText/EditableText';
 import './UnitAtribute.css'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useMemo, useState } from 'react'
 import { LevelMeaning, rollValueAgaintChallenge } from './definitions';
 import { generalTranslator } from '../Definitions';
+import { getBuffLimit } from '../../MinucesAndThings/Things/definitions';
 
 
 type UnitKind ={name: 'capacity'} | {name: 'stat', stat: Stat['kind']}
 
 type Props =  React.HTMLAttributes<HTMLDivElement> & {
+    user: Player
     name: string
     value: Gliph;
     challenge: Gliph
@@ -26,24 +28,37 @@ type Props =  React.HTMLAttributes<HTMLDivElement> & {
     bottomComponent?: ReactElement
 };
 
-const UnitAtribute: React.FC<Props> = ({ name, setAttributeName, kind, value, challenge, editable, setAttributeValue, setCifraResult, setTextResult, setExtraResult, rollCountDuo, rolable=true, bottomComponent, modifications, setMods, ...props }) => {
+const UnitAtribute: React.FC<Props> = ({ user, name, setAttributeName, kind, value, challenge, editable, setAttributeValue, setCifraResult, setTextResult, setExtraResult, rollCountDuo, rolable=true, bottomComponent, modifications, setMods, ...props }) => {
     const [rollCount, setRollCount] = rollCountDuo
     const [tempMod, setTempMod] = useState<ExtendedSignal>('')
+    const buffLimit = getBuffLimit(user, name)
+
+    const amountBuffed = useMemo(()=>{
+        if(kind.name=='capacity'){
+            return user.currentMods
+                .filter(m=>m.kind=='capacity' && m.keywords[0]==name)
+                .reduce<ExtendedSignal>((a, b) => sumSignal(a, b.value, buffLimit), '')
+        }else{
+            return user.currentMods
+            .filter(m=>m.kind=='stat' && m.keywords[0]==name && m.keywords[1]==kind.stat)
+            .reduce<ExtendedSignal>((a, b) => sumSignal(a, b.value, buffLimit), '')
+        }
+    },[buffLimit, kind, name, user.currentMods])
 
     useEffect(()=>{
-        const mod = findBasicMod(modifications, kind, name, false)
+        const mod = findBasicMod(user, modifications, kind, name, false)
         if(mod) {
             setTempMod(mod.value)
         } else {
             setTempMod('')
         }
-    },[kind, modifications, name])
+    },[kind, modifications, name, user])
     
     function alterMod(direction: number) {
         const newMods = [...modifications]
-        const curretMod = findBasicMod(newMods, kind, name)
+        const curretMod = findBasicMod(user, newMods, kind, name)
         if(curretMod){
-            curretMod.value = modifySignal(curretMod.value, direction)
+            curretMod.value = modifySignal(curretMod.value, direction, buffLimit)
         } else {
             newMods.push({
                 origin: '*',
@@ -66,7 +81,13 @@ const UnitAtribute: React.FC<Props> = ({ name, setAttributeName, kind, value, ch
     
     const canIncrease = () => {
         const indexOf = GliphConst.indexOf(value as Gliph)
-        return indexOf<GliphConst.length-1
+        return indexOf < GliphConst.length-1
+    }
+    
+    const canIncreaseSignal = () => {
+        const meanIndex = SignalsConst.indexOf('')
+        const buffedIndex = SignalsConst.indexOf(amountBuffed)
+        return buffedIndex - meanIndex < buffLimit
     }
 
     const canDecrease = () => {
@@ -97,6 +118,7 @@ const UnitAtribute: React.FC<Props> = ({ name, setAttributeName, kind, value, ch
 
     const tempIncrease = () => {
         if(!canIncrease()){ return }
+        if(!canIncreaseSignal()){ return }
         alterMod(1)
     }
 
@@ -135,7 +157,7 @@ const UnitAtribute: React.FC<Props> = ({ name, setAttributeName, kind, value, ch
     )
 }
 
-function findBasicMod(modList: Modification[], kind: UnitKind, name: string, relevantOrigin: boolean = true): Modification|undefined{
+function findBasicMod(user: Player, modList: Modification[], kind: UnitKind, name: string, relevantOrigin: boolean = true): Modification|undefined{
     let result: Modification[]
     if(kind.name === 'capacity') {
         result = modList.filter(mod =>
@@ -153,7 +175,7 @@ function findBasicMod(modList: Modification[], kind: UnitKind, name: string, rel
         const aggregated: Modification = {...result[0]}
         aggregated.value=''
         for(const mod of result){
-            aggregated.value = sumSignal(aggregated.value, mod.value)
+            aggregated.value = sumSignal(aggregated.value, mod.value, getBuffLimit(user, name))
         }
         return aggregated
     }

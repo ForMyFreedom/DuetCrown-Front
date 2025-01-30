@@ -1,5 +1,31 @@
-import { Capacities, ExtendedSignal, Gliph, Player, getGliphAfterMod, sumSignal } from "../../../UserDomain"
+import { CAPACITY_BUFF_LIMIT, Capacities, ExtendedSignal, Gliph, MOVIMENT_BUFF_LIMIT, Player, getGliphAfterMod, sumSignal } from "../../../UserDomain"
 import { generalInverseTranslator } from "../../Attibutes/Definitions"
+
+export const getBuffLimit = (user: Player, relativeCapacity: string): number => {
+  const capacityOrigin = getCapacityOrigin(user, relativeCapacity)
+  if(capacityOrigin=='peculiars'){
+    return MOVIMENT_BUFF_LIMIT
+  }else{
+    return CAPACITY_BUFF_LIMIT
+  }
+}
+
+export const getCapacityOrigin = (user: Player, relativeCapacity: string): keyof Capacities => {
+  function localOperation(cap: string){
+    if(Object.keys(user.capacities.peculiars).includes(cap)) {
+      return 'peculiars'
+    }
+    if(Object.keys(user.capacities.basics).includes(cap)) {
+      return 'basics'
+    }
+    if(Object.keys(user.capacities.specials).includes(cap)) {
+      return 'specials'
+    }
+  }
+  return localOperation(relativeCapacity) ?? localOperation(
+    generalInverseTranslator(relativeCapacity)
+  ) ?? 'primal'
+}
 
 export const getGliphFromCapacityName = (user: Player, relativeCapacity: string|undefined, withMods: boolean = false): Gliph|undefined => {
   if(!relativeCapacity) { return undefined }
@@ -12,7 +38,7 @@ export const getGliphFromCapacityName = (user: Player, relativeCapacity: string|
   }
   const gliph = getGliph(user, relativeCapacity) || getGliph(user, generalInverseTranslator(relativeCapacity))
   if(!gliph) { return undefined }
-  return getGliphAfterMod(gliph, extraSignal)
+  return getGliphAfterMod(gliph, extraSignal, getBuffLimit(user, relativeCapacity))
 }
 
 function getGliph(user: Player, relativeCapacity: string): Gliph|undefined {

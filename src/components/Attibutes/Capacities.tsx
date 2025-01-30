@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './Capacities.css'
-import { Capacities, Gliph, GliphConst, Modification, Player, ProgessInCapacities, Stat, getGliphAfterMod, inverseSignal } from '../../UserDomain'
+import { CAPACITY_BUFF_LIMIT, Capacities, Gliph, GliphConst, MOVIMENT_BUFF_LIMIT, Modification, Player, ProgessInCapacities, Stat, getGliphAfterMod, inverseSignal, resumeTheMods } from '../../UserDomain'
 import UnitAtribute from './components/UnitAtribute';
 import UnitChallenge from './components/UnitChallenge';
 import { TRANSLATE_KIND_ATRIBUTE } from './Definitions';
@@ -45,19 +45,20 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
 
   const moddedCapacities = useMemo(() => {
     const newCapacities: Capacities = JSON.parse(JSON.stringify(user.capacities))
-    for(const mod of user.currentMods){
+    const resumeMods = resumeTheMods(user.currentMods)
+    for(const mod of resumeMods){
       if(mod.kind == 'capacity') {
         const basicFind = simplyFind<Gliph>(newCapacities.basics, mod.keywords[0])
         if(basicFind){
-          newCapacities.basics[mod.keywords[0] as keyof Capacities['basics']] = getGliphAfterMod(basicFind, mod.value)
+          newCapacities.basics[mod.keywords[0] as keyof Capacities['basics']] = getGliphAfterMod(basicFind, mod.value, CAPACITY_BUFF_LIMIT)
         }
         const specialFind = simplyFind<Gliph>(newCapacities.specials, mod.keywords[0])
         if(specialFind){
-          newCapacities.specials[mod.keywords[0] as keyof Capacities['specials']] = getGliphAfterMod(specialFind, mod.value)
+          newCapacities.specials[mod.keywords[0] as keyof Capacities['specials']] = getGliphAfterMod(specialFind, mod.value, CAPACITY_BUFF_LIMIT)
         }
         const peculiarFind = simplyFind<Gliph>(newCapacities.peculiars, mod.keywords[0])
         if(peculiarFind){
-          newCapacities.peculiars[mod.keywords[0]] = getGliphAfterMod(peculiarFind, mod.value)
+          newCapacities.peculiars[mod.keywords[0]] = getGliphAfterMod(peculiarFind, mod.value, MOVIMENT_BUFF_LIMIT)
         } 
       }
     }
@@ -167,7 +168,8 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
 
         for(const mod of user.currentMods) {
           if(mod.kind=='capacity' && mod.keywords[0]==name) {
-            value = getGliphAfterMod(value, inverseSignal(mod.value))
+            const buffLimit = key =='peculiars' ? MOVIMENT_BUFF_LIMIT : CAPACITY_BUFF_LIMIT
+            value = getGliphAfterMod(value, inverseSignal(mod.value), buffLimit)
           }
         }
 
@@ -179,7 +181,7 @@ const CapacitiesElement: React.FC<Props> = ({ title, user, setUser, setCapacitie
     const values = moddedCapacities[key] as {[key: string]: Gliph}
     if(Object.keys(values).length == 0) { return [] }
     return (Object.keys(values) as (keyof Capacities[T])[]).map((internalKey, index) => {
-      return <UnitAtribute key={index} name={internalKey as string}
+      return <UnitAtribute user={user} key={index} name={internalKey as string}
         modifications={user.currentMods}
         kind={{name: 'capacity'}}
         setMods={(mods: Modification[])=> setUser(prevUser=> ({...prevUser, currentMods: mods}))}

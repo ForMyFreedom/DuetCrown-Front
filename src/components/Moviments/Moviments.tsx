@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
-import { Player, Moviment, getGliphAfterMod, modifySignal, Gliph, getMeanOfGliphs, CommumMoviment } from '../../UserDomain';
+import { Player, Moviment, getGliphAfterMod, modifySignal, Gliph, getMeanOfGliphs, CommumMoviment, MOVIMENT_BUFF_LIMIT } from '../../UserDomain';
 import './Moviments.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
@@ -101,7 +101,7 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
     } else {
       const gliph = getGliphFromCapacityName(user, mov.relativeCapacity, true);
       if(gliph != undefined){
-        return getGliphAfterMod(gliph, mov.agregated)
+        return getGliphAfterMod(gliph, mov.agregated, MOVIMENT_BUFF_LIMIT)
       }
       return 'FF-'
     }
@@ -167,7 +167,7 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
       const newMoviments = [...prevMoviments];
       const findMov = newMoviments.find((m) => m.name === mov.name);
       if (findMov) {
-        findMov.agregated = modifySignal(findMov.agregated, 1);
+        findMov.agregated = modifySignal(findMov.agregated, 1, MOVIMENT_BUFF_LIMIT);
       }
   
       return newMoviments;
@@ -179,7 +179,7 @@ const Moviments: React.FC<Props> = ({ user, setUser }) => {
       const newMoviments = [...prevMoviments]
       const findMov = newMoviments.find(m=>m.name === mov.name);
       if(findMov) {
-        findMov.agregated = modifySignal(findMov.agregated, -1)
+        findMov.agregated = modifySignal(findMov.agregated, -1, MOVIMENT_BUFF_LIMIT)
       }
 
       return newMoviments

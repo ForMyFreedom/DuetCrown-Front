@@ -1,12 +1,12 @@
 import React, { useCallback, useMemo, useRef, useState, ReactElement, useEffect } from 'react';
 import '../Attibutes/Capacities.css'
 import './Stats.css'
-import { Capacities, ExtendedSignal, Gliph, Modification, Player, Stat, StatConst, getGliphAfterMod, solveDMG, subtractGliphs, sumSignal } from '../../UserDomain'
+import { Capacities, ExtendedSignal, Gliph, Modification, Player, Stat, StatConst, getGliphAfterMod, resumeTheMods, solveDMG, subtractGliphs, sumSignal } from '../../UserDomain'
 import { ResultTextOptions } from '../Attibutes/components/definitions';
 import AttributeHandler from '../Attibutes/abstract/AttributeHandler';
 import UnitChallenge from '../Attibutes/components/UnitChallenge';
 import UnitAtribute from '../Attibutes/components/UnitAtribute';
-import { getGliphFromCapacityName } from '../MinucesAndThings/Things/definitions';
+import { getBuffLimit, getGliphFromCapacityName } from '../MinucesAndThings/Things/definitions';
 import { generalTranslator } from '../Attibutes/Definitions';
 import UnitNumber from '../Attibutes/components/UnitNumber';
 
@@ -34,13 +34,13 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
 
 
   const statWithMod = useMemo(()=>{
-    const allMods = user.currentMods
     const newStats: Stat[] = JSON.parse(JSON.stringify(stats))
-    for(const mod of allMods) {
+    const resumedMods = resumeTheMods(user.currentMods)
+    for(const mod of resumedMods) {
       if (mod.kind == 'stat') {
         const stat = newStats.find((s: Stat) => s.relativeCapacity==mod.keywords[0] && s.kind==mod.keywords[1])
         if(stat){
-          stat.naturalMod = sumSignal(stat.naturalMod, mod.value)
+          stat.naturalMod = sumSignal(stat.naturalMod, mod.value, getBuffLimit(user, mod.keywords[0]))
         } else {
           newStats.push({relativeCapacity: mod.keywords[0], kind: mod.keywords[1] as Stat['kind'], naturalMod: mod.value})
         }
@@ -48,7 +48,7 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
         for (const kind of StatConst) {
           const internalStat = newStats.find((s: Stat) => s.relativeCapacity==mod.keywords[0] && s.kind==kind)
           if (internalStat) {
-            internalStat.naturalMod = sumSignal(internalStat.naturalMod, mod.value)
+            internalStat.naturalMod = sumSignal(internalStat.naturalMod, mod.value, getBuffLimit(user, mod.keywords[0]))
           } else {
             newStats.push({kind: kind, relativeCapacity: mod.keywords[0], naturalMod: mod.value})
           }
@@ -157,7 +157,7 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
 
       for(const mod of user.currentMods) {
         if(mod.keywords[0]==oldStat.relativeCapacity) {
-          relativeGliph = getGliphAfterMod(relativeGliph, mod.value)
+          relativeGliph = getGliphAfterMod(relativeGliph, mod.value, getBuffLimit(user, mod.keywords[0]))
         }
       }
 
@@ -179,7 +179,7 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
   const getFinalStatValue = (capacityName: string, mod: ExtendedSignal): Gliph => {
     const capacityGliph = getGliphFromCapacityName(user, capacityName)
     if(capacityGliph) {
-      return getGliphAfterMod(capacityGliph, mod)
+      return getGliphAfterMod(capacityGliph, mod, getBuffLimit(user, capacityName))
     }
     return 'FF-'
   }
@@ -204,6 +204,7 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
   function getStatUnitAtribute(index: number, stat: Stat, isRollable: boolean): ReactElement {
     return <div key={index} className='stat-flex-box'>
       <UnitAtribute
+        user={user}
         key={`${stat.relativeCapacity}-${stat.kind}`}
         name={stat.relativeCapacity}
         kind={{name: 'stat', stat: stat.kind}}
@@ -234,7 +235,7 @@ const Stats: React.FC<Props> = ({ user, setUser }) => {
       const baseGliph = getGliphFromCapacityName(user, baseStat.relativeCapacity)
       if(baseGliph){
         const mod = solveDMG(
-          getGliphAfterMod(baseGliph, baseStat.naturalMod),
+          getGliphAfterMod(baseGliph, baseStat.naturalMod, getBuffLimit(user, baseStat.relativeCapacity)),
           challenge
         )
         let treatMod = Math.min(Math.max(0, mod), 100)

@@ -10,6 +10,9 @@ export const SignalsConst: ExtendedSignal[] = ['-🌎🌎', '-🌎---', '-🌎--
 export const MeanSignalIndex = SignalsConst.indexOf('')
 export const StatConst: Stat['kind'][] = ['VIT', 'DMG', 'DEF', 'ATK']
 
+export const CAPACITY_BUFF_LIMIT = 4
+export const MOVIMENT_BUFF_LIMIT = 6
+
 export type Capacities = {
   basics: {
     strength: Gliph
@@ -129,6 +132,8 @@ export type Modification = {
   keywords: string[] // In case of capacity, is ['relativeCapacity']... In case of stat, is ['relativeCapacity', 'stat_kind']
 }
 
+export type SimpleModification = Pick<Modification, 'value'|'keywords'|'kind'>
+
 
 
 export type StringRelation = {[key: string]: string}
@@ -180,11 +185,14 @@ export function isGliphInRegularity(personalGliph: Gliph|''|undefined, otherGlip
   return ''
 }
 
-export function getGliphAfterMod(gliph: Gliph|undefined, mod: ExtendedSignal) {
+export function getGliphAfterMod(gliph: Gliph|undefined, mod: ExtendedSignal, buffLimit: number) {
   if(!gliph) { return GliphConst[0] }
   const middleIndex= SignalsConst.indexOf('')
   const modIndex = SignalsConst.indexOf(mod)
-  const dif = modIndex-middleIndex
+  let dif = modIndex - middleIndex
+  if (dif > buffLimit) {
+    dif = buffLimit
+  }
   const gliphFinalDif = GliphConst.indexOf(gliph)+dif
   if(gliphFinalDif<0){
     return GliphConst[0]
@@ -227,15 +235,21 @@ export function solveDMG(vitGliph: Gliph, modGliph: Gliph): number {
   return Math.floor(percen)
 }
 
-export function modifySignal(signal: ExtendedSignal, mod: number): ExtendedSignal {
-  const signalIndex= SignalsConst.indexOf(signal)
-  const finalIndex = signalIndex+mod
+export function modifySignal(signal: ExtendedSignal, mod: number, buffLimit: number): ExtendedSignal {
+  const signalIndex = SignalsConst.indexOf(signal)
+  const meanIndex = SignalsConst.indexOf('')
+  let finalIndex = signalIndex + mod
+  const indexDif = finalIndex - meanIndex
+
+  if (indexDif>buffLimit) {
+    finalIndex = meanIndex+buffLimit
+  }
 
   if(finalIndex<0){
     return SignalsConst[0]
   }
 
-   if(finalIndex>=SignalsConst.length){
+  if(finalIndex>=SignalsConst.length){
     return SignalsConst[SignalsConst.length-1]
   }
   return SignalsConst[finalIndex]
@@ -261,19 +275,24 @@ export function getSignalWithAmount(amount: number, symbol: '+'|'-'): ExtendedSi
   return SignalsConst[finalIndex]
 }
 
-export function sumSignal(signal1: ExtendedSignal, signal2: ExtendedSignal): ExtendedSignal {
-  return operateSignal(signal1, signal2, 1)
+export function sumSignal(signal1: ExtendedSignal, signal2: ExtendedSignal, buffLimit: number): ExtendedSignal {
+  return operateSignal(signal1, signal2, 1, buffLimit)
 }
 
-export function subSignal(signal1: ExtendedSignal, signal2: ExtendedSignal): ExtendedSignal {
-  return operateSignal(signal1, signal2, -1)
+export function subSignal(signal1: ExtendedSignal, signal2: ExtendedSignal, buffLimit: number): ExtendedSignal {
+  return operateSignal(signal1, signal2, -1, buffLimit)
 }
 
-function operateSignal(signal1: ExtendedSignal, signal2: ExtendedSignal, operate: 1|-1): ExtendedSignal {
+function operateSignal(signal1: ExtendedSignal, signal2: ExtendedSignal, operate: 1|-1, buffLimit: number): ExtendedSignal {
   const meanIndex = SignalsConst.indexOf('')
   const signal1Index = SignalsConst.indexOf(signal1) - meanIndex
   const signal2Index = SignalsConst.indexOf(signal2) - meanIndex
-  const finalIndex = meanIndex + signal1Index + operate * signal2Index
+  let finalIndex = meanIndex + signal1Index + operate * signal2Index
+  const dif = finalIndex - meanIndex
+  if(dif>buffLimit) {
+    finalIndex = meanIndex + buffLimit
+  }
+
   if(finalIndex<0){
     return SignalsConst[0]
   }
@@ -295,7 +314,6 @@ export function inverseSignal(signal: ExtendedSignal): ExtendedSignal {
   }
   return SignalsConst[finalIndex]
 }
-
 
 
 export function calculateLevelOfPlayer(player: Player): Gliph {
@@ -327,6 +345,22 @@ export function calculateLevelOfPlayer(player: Player): Gliph {
   return GliphConst[levelMean]
 }
 
+export function resumeTheMods(mods: Modification[]): SimpleModification[]{
+  const newMods: SimpleModification[] = []
+  for(const m of mods){
+    const modOfKeyword = newMods.find(x=>checkEqual(x.keywords, m.keywords))
+    if(modOfKeyword) {
+      modOfKeyword.value = operateSignal(modOfKeyword.value, m.value, 1, Infinity)
+    } else {
+      newMods.push({
+        keywords: m.keywords,
+        value: m.value,
+        kind: m.kind
+      })
+    }
+  }
+  return newMods
+}
 
 function aggregation(y: number): number {
   if(y<=4) { return (y-1)/3 }
@@ -382,3 +416,16 @@ function changeBonusInRelative(toSet: boolean, user: Player, bonus: ExtendedSign
   }
 }
 */
+
+function checkEqual<T>(a: T[], b: T[]): boolean {
+  if (a.length !== b.length) return false;
+  const newA = structuredClone(a)
+  const newB = structuredClone(b)
+  newA.sort();
+  newB.sort()
+  for (let i = 0; i < newA.length; i++)
+      if (newA[i] !== newB[i])
+          return false;
+
+  return true;
+}
